@@ -1,32 +1,33 @@
 package com.farmstory.entity;
 
+
+
 import com.farmstory.dto.TermsDTO;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity                 // 엔티티 객체 정의
-@Builder
+@Setter
 @ToString
-@Table(name = "Terms")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity
+@Table(name = "terms")
 public class Terms {
+
     @Id
-    @Column(name = "termName", columnDefinition = "TEXT")
-    private String termName;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int seq;
 
-    @Column(name = "termContent", columnDefinition = "TEXT")
-    private String termContent;
+    private String terms;
+    private String privacy;
 
-    public TermsDTO toDTO() {
+    public TermsDTO toDTO(){
         return TermsDTO.builder()
-                .termName(termName)
-                .termContent(termContent)
+                .seq(seq)
+                .terms(terms)
+                .privacy(privacy)
                 .build();
     }
-
 }
