@@ -7,22 +7,28 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity                 // 엔티티 객체 정의
-@Builder
+@Setter
 @ToString
-public class File {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity
+@Table(name = "file")
+public class FileEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int fileNo;
+    private int fno;
+
+    private int ano;
     private String oName;
     private String sName;
-
-    @ManyToOne
-    @JoinColumn(name = "artNo")
-    private Article article;
-
+    private int download;
+    private int count;
     @CreationTimestamp
-    private LocalDateTime createAt;
+    private LocalDateTime rdate;
+
+    public void addCount(){
+        this.count++;
+    }
+
 }
