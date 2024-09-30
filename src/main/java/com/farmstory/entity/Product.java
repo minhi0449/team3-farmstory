@@ -43,7 +43,7 @@ public class Product {
 
 
     @ManyToOne
-    @JoinColumn(name = "user_uid")
+    @JoinColumn(name = "uid")
     @ToString.Exclude
     private User user;
 

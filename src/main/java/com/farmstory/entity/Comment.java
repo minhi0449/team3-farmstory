@@ -2,29 +2,39 @@ package com.farmstory.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity                 // 엔티티 객체 정의
-@Builder
+@Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity
+@Table(name = "comment")
 public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int ComNo;
+    private int no;
+
+    private int parent;
+    private String content;
+    //private String writer;
+    private String regip;
+
+    @CreationTimestamp
+    private LocalDateTime rdate;
 
     @ManyToOne
-    @JoinColumn(name = "uid")
+    @JoinColumn(name = "writer")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "artNo")
-        private Article article;
-
-    private String content;
-    private LocalDateTime createAt;
+    public void addUser(User user){
+        this.user = user;
+    }
 
 }
+
