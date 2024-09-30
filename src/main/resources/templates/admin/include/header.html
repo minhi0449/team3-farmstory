@@ -1,3 +1,5 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <header>
   <div class="headerIn">
     <div class="top">
@@ -6,7 +8,12 @@
     <div class="utill">
       <ul>
         <li><a th:href="@{/}" class="util_home">HOME</a></li>
-        <li><a href="#" class="util_logout">로그아웃</a></li>
+        <li sec:authorize="isAuthenticated()">
+          <a th:href="@{/user/logout}">로그아웃</a>
+        </li>
+        <li sec:authorize="!isAuthenticated()">
+          <a th:href = "@{/user/login}">로그인</a>
+        </li>
         <li><a th:href="@{/community/notice}" class="util_cs">고객센터</a></li>
       </ul>
     </div>

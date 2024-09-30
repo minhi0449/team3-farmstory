@@ -28,7 +28,7 @@ public class Product {
     private String type;
     private int price;
     private int discount;
-    private int deliveryfee;
+    private int deliveryFee;
     private int stock;
     private int point;
     private String img1;
@@ -72,7 +72,7 @@ public class Product {
                 .type(type)
                 .price(price)
                 .discount(discount)
-                .deliveryfee(deliveryfee)
+                .deliveryFee(deliveryFee)
                 .stock(stock)
                 .point(point)
                 .img1(img1)

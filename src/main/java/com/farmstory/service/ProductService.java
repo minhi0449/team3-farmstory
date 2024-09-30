@@ -92,6 +92,7 @@ public class ProductService {
         log.info("ProductService > insertProduct end");
     }
 
+    @Transactional
     public void updateProduct(ProductDTO productDTO, MultipartFile[] images) {
         String path = new File(uploadPath).getAbsolutePath();
         log.info(path);
@@ -146,11 +147,11 @@ public class ProductService {
         // ProductDTO를 Entity로 변환하여 저장
         Product entity = productDTO.toEntity();
 
-        // uid에 해당하는 User 객체 찾아서 저장 전 추가
-        String uid = productDTO.getUid();
-        Optional<User> optUser = userRepository.findById(productDTO.getUid());
-        User user = optUser.orElseThrow(() -> new RuntimeException("User Not Found"));
-        entity.addUser(user);
+//        // uid에 해당하는 User 객체 찾아서 저장 전 추가
+//        String uid = productDTO.getUid();
+//        Optional<User> optUser = userRepository.findById(productDTO.getUid());
+//        User user = optUser.orElseThrow(() -> new RuntimeException("User Not Found"));
+//        entity.addUser(user);
 
         productRepository.save(entity);
 

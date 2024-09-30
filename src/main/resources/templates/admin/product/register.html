@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -33,7 +34,7 @@
                             <div class="main_top"><h2>상품등록</h2></div>
                             <div class="reg_table">
                                 <table id="product">
-                                    <input type="text" name="uid" value="farmstory" readonly>
+                                    <input type="text" name="uid" th:value="${#authentication.principal.user.uid}" readonly>
                                     <tr>
                                         <th>상품명</th>
                                         <td><input type="text" name="prodName"/></td>
@@ -66,22 +67,22 @@
                                     </tr>
                                     <tr>
                                         <th>할인율</th>
-                                         <td><input type="number" id ="discountrate" name="discount" min="0" max="100"/>&nbsp;%</td>
+                                         <td><input type="number" id ="discountRate" name="discount" min="0" max="100"/>&nbsp;%</td>
                                     </tr>
                                     <tr>
                                         <th>배송비</th>
                                         <td>
                                             <label>
-                                                <input type="radio" name="deliveryfee" id="check2" value="2000" th:checked="${deliveryfee == 2000}"/> 2000원
+                                                <input type="radio" name="deliveryFee" id="check2" value="2000" th:checked="${deliveryfee == 2000}"/> 2000원
                                             </label>
                                             <label>
-                                                <input type="radio" name="deliveryfee" id="check3" value="3000" th:checked="${deliveryfee == 3000}"/> 3000원
+                                                <input type="radio" name="deliveryFee" id="check3" value="3000" th:checked="${deliveryfee == 3000}"/> 3000원
                                             </label>
                                             <label>
-                                                <input type="radio" name="deliveryfee" id="check4"  value="5000" th:checked="${deliveryfee == 5000}"/> 5000원
+                                                <input type="radio" name="deliveryFee" id="check4"  value="5000" th:checked="${deliveryfee == 5000}"/> 5000원
                                             </label>
                                             <label>
-                                                <input type="radio" name="deliveryfee" id="check1" value="0" th:checked="${deliveryfee == 0}"/> 무료
+                                                <input type="radio" name="deliveryFee" id="check1" value="0" th:checked="${deliveryfee == 0}"/> 무료
                                             </label>
                                         </td>
                                     </tr>

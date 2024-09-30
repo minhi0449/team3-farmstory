@@ -24,7 +24,7 @@ public class ProductRepositoryTest {
                 .type("과자")
                 .price(1200)
                 .discount(5)
-                .deliveryfee(2500)
+                .deliveryFee(2500)
                 .stock(10000)
                 .img1("")
                 .img2("")
