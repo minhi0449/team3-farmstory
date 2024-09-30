@@ -17,7 +17,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int cartNo;
     private int count;
-    private String uid;
+
 
     @ManyToOne
     @JoinColumn(name = "product_id")
@@ -27,15 +27,23 @@ public class Cart {
         this.product = product;
     }
 
+
     public CartRequestDTO toDTO(){
         return CartRequestDTO.builder()
                 .product_id(product.getProdNo())
                 .count(count)
                 .build();
     }
-//    @ManyToOne
-//    @JoinColumn(name = "uid")
-//    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "uid")
+    private User user;
+
+    public void addUser(User user) {
+        this.user = user;
+    }
+
+
     public void changeProduct (Product product) {
         this.product = product;
     }
@@ -49,4 +57,6 @@ public class Cart {
     public void decreaseCount(int num) {
         this.count -= num;
     }
+
+
 }

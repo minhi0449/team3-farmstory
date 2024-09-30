@@ -83,9 +83,11 @@
 
                 console.log("quantity : " + quantity);
 
+                const user = document.getElementsByName('uid')[0].value;
                 const JsonData = {
                     "product_id": prodNo,
-                    "count": quantity
+                    "count": quantity,
+                    "uid" : user
 
                 }
                 const data = await fetchPost('/farmstory/market/cart', JsonData)
@@ -151,6 +153,7 @@
                             <br>
                             <table>
                                 <tr>
+                                    <input type="hidden" th:value="${#authentication.principal.user.uid}" name="uid">
                                     <th>상품명</th>
                                     <td class="product" id="prodName">[[${product.prodName}]]</td>
                                 </tr>

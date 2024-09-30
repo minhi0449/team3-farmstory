@@ -3,17 +3,15 @@ package com.farmstory.Controller;
 
 import com.farmstory.dto.CartRequestDTO;
 import com.farmstory.dto.CartResponseDTO;
+import com.farmstory.entity.User;
 import com.farmstory.service.CartService;
-import com.farmstory.service.ProductService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,7 +22,7 @@ import java.util.List;
 public class CartController {
 
     private final CartService cartService;
-    private final ProductService productService;
+//    private final ProductService productService;
 
     // cart
     @GetMapping("/market/cart")
@@ -34,16 +32,18 @@ public class CartController {
         log.info("cartdto : " + cartdto);
         model.addAttribute("cart", cartdto);
 
-        return "/market/cart";
+        return "market/cart";
     }
 
+    @ResponseBody
     @PostMapping("/market/cart")
-    public ResponseEntity<CartRequestDTO> cart(@RequestBody CartRequestDTO cartRequestDTO, Model model) {
-
+    public ResponseEntity<CartRequestDTO> cart(@RequestBody CartRequestDTO cartRequestDTO) {
+        String uid = cartRequestDTO.getUid();
+        log.info("uid :" + uid);
         CartRequestDTO dto = cartService.insertCart(cartRequestDTO);
+        dto.setUid(uid);
+        log.info("dto : " + dto);
 
-        // 나중에 빼기
-        dto.setUid("ghkdtnqls95");
         return ResponseEntity
                 .ok()
                 .body(dto);
