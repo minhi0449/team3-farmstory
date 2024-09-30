@@ -18,6 +18,7 @@ public class CartResponseDTO {
     private int count;
     private String uid;
     private ProductDTO product;
+    private UserDTO user;
 
 
     public Cart toEntity(){

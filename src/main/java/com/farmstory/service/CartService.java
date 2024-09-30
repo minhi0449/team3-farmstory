@@ -4,8 +4,10 @@ import com.farmstory.dto.CartRequestDTO;
 import com.farmstory.dto.CartResponseDTO;
 import com.farmstory.entity.Cart;
 import com.farmstory.entity.Product;
+import com.farmstory.entity.User;
 import com.farmstory.repository.CartRepository;
 import com.farmstory.repository.ProductRepository;
+import com.farmstory.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,6 +26,7 @@ public class CartService {
 
     private final ProductRepository productRepository;
     private final CartRepository cartRepository;
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
 
@@ -39,9 +42,13 @@ public class CartService {
             }else {
                 System.out.println("없음");
                 Product product = productRepository.findById(cartRequestDTO.getProduct_id());
+                User user = User.builder()
+                        .uid(cartRequestDTO.getUid())
+                        .build();
                 if(product != null) {
                     cart = cartRequestDTO.toEntity();
                     cart.addProduct(product);
+                    cart.addUser(user); //build로 넣어보기
                     cartRepository.save(cart);
                 }
             }
@@ -50,7 +57,7 @@ public class CartService {
 
 
     public List<CartResponseDTO> selectAllCartByUid(String uid) {
-        List<Cart> carts = cartRepository.findByUid(uid);
+        List<Cart> carts = cartRepository.findByUserUid(uid);
         log.info("optcart" + carts);
 
         List<CartResponseDTO> cartDtos = carts.stream()
