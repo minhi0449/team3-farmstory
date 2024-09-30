@@ -12,7 +12,7 @@ import lombok.*;
 @Entity                 // 엔티티 객체 정의
 @Builder
 @ToString
-@Table(name = "User")
+@Table(name = "Users")
 public class User {
     @Id
     private String uid;
