@@ -42,7 +42,7 @@ public class CartService {
             }else {
                 System.out.println("없음");
                 Product product = productRepository.findById(cartRequestDTO.getProduct_id());
-                User user = User.builder()
+              User user = User.builder()
                         .uid(cartRequestDTO.getUid())
                         .build();
                 if(product != null) {
@@ -64,5 +64,11 @@ public class CartService {
                 .map(cart -> modelMapper.map(cart, CartResponseDTO.class)) // DTO 변환
                 .collect(Collectors.toList());
         return cartDtos;
+    }
+
+    public void deleteCart(List<Integer> data){
+        for(Integer No : data){
+            cartRepository.deleteById(No);
+        }
     }
 }

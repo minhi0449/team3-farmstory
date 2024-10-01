@@ -54,5 +54,15 @@ public class CartController {
 
         return "/market/order";
     }
+    @ResponseBody
+    @DeleteMapping("/market/cart/delete")
+    public ResponseEntity<?> delete(@RequestBody List<Integer> data) {
+        if(data == null || data.isEmpty()){
+            return ResponseEntity.badRequest().body("삭제할 항목이 없습니다.");
+        }else {
+            cartService.deleteCart(data);
+            return ResponseEntity.ok().build();
+        }
+    }
 
 }
