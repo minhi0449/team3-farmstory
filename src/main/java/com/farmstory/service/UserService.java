@@ -81,7 +81,7 @@ public class UserService {
         return null;
     }
 
-    //유저 정보 전체 가져오기
+    //유저 정보 전체 가져오기 (admin 관리자 회원목록)
     public List<UserDTO> selectUsers(){
 
         List<User> userall = userRepository.findAll();

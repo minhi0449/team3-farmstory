@@ -11,7 +11,8 @@
         </div><!-- .logo -->
 
         <th:block th:if="${!#authentication.principal.equals('anonymousUser')}">
-            <p id="loginSuccess">안녕하세요<span class="loginNick"> [[${#authentication.principal.user.nick}]]</span> 님 </p>
+            <p id="loginSuccess">안녕하세요<span class="loginNick"> [[${#authentication.principal.user.nick}]]</span>
+                <i class="loginRole">&#91;[[${#authentication.principal.user.role}]]&#93;</i> 님 </p>
         </th:block>
 
         <ul class="utill">

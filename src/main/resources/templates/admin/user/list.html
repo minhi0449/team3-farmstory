@@ -37,27 +37,27 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:if="${userDto == null}">
+                                        <tr th:if="${users == null}">
                                             <td colspan="10" style="width: 100%;">등록된 회원이 없습니다.</td>
                                         </tr>
-                                        <tr var="user" th:each="user:${userDto}">
+                                        <tr var="user" th:each="user:${users}">
                                             <td><input type="checkbox" name="select"></td>
-                                            <td th:text="${user.userUid}"></td>
-                                            <td th:text="${user.userName}"></td>
-                                            <td th:text="${user.userNick}"></td>
-                                            <td th:text="${user.userEmail}"></td>
-                                            <td th:text="${user.userHp}"></td>
+                                            <td th:text="${user.uid}"></td>
+                                            <td th:text="${user.name}"></td>
+                                            <td th:text="${user.nick}"></td>
+                                            <td th:text="${user.email}"></td>
+                                            <td th:text="${user.hp}"></td>
                                             <td>
-                                                <select class="usergrade" th:data-id="${user.userUid}">
-                                                    <option value="ADMIN" th:selected="${user.userRole}=='ADMIN'">1</option>
-                                                    <option value="2" th:selected="${user.userRole}==2">2</option>
-                                                    <option value="3" th:selected="${user.userRole}==3">3</option>
-                                                    <option value="4" th:selected="${user.userRole}==4">4</option>
-                                                    <option value="5" th:selected="${user.userRole}==5">5</option>
-                                                    <option value="0" th:selected="${user.userRole}==0">0</option>
+                                                <select class="usergrade" th:data-id="${user.uid}">
+                                                    <option value="ADMIN" th:selected="${user.role}=='ADMIN'">1</option>
+                                                    <option value="2" th:selected="${user.role}==2">2</option>
+                                                    <option value="3" th:selected="${user.role}==3">3</option>
+                                                    <option value="4" th:selected="${user.role}==4">4</option>
+                                                    <option value="5" th:selected="${user.role}==5">5</option>
+                                                    <option value="0" th:selected="${user.role}==0">0</option>
                                                 </select>
                                             </td>
-                                            <td th:text="${user.userRegDate}"></td>
+                                            <td th:text="${user.createdAt}"></td>
                                             <td><a href="#">[상세확인]</a></td>
                                         </tr>
                                     </tbody>

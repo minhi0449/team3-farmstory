@@ -20,7 +20,10 @@ public class Terms {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int seq;
 
+    @Column(name = "terms", columnDefinition = "TEXT")
     private String terms;
+
+    @Column(name = "privacy", columnDefinition = "TEXT")
     private String privacy;
 
     public TermsDTO toDTO(){
