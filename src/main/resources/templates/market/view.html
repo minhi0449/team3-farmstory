@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,6 +34,7 @@
             // 합계 계산 함수
             function calculateSum() {
                 document.getElementById('originalFee').style.display = 'none';
+                document.getElementById('etc').style.display = 'none';
                 // 가격, 수량, 배송비 가져오기
                 const price = parseFloat(document.getElementById('price').textContent) || 0; // 가격을 숫자로 변환
                 const quantity = parseInt(document.getElementById('quantity').value) || 1; // 수량을 정수로 변환
@@ -39,9 +42,13 @@
                 const originalDeliveryFee = parseFloat(document.getElementById('originalFee').textContent);  //
                 let deliveryFee = parseFloat(document.getElementById('originalFee').textContent) || 0; // 바뀔 배송비
                 const freeDeliveryCondition = parseInt(document.getElementById('etc').textContent) || 0;
+                const first = document.getElementById('etc').textContent.charAt(0);
 
-                document.getElementById('etc').textContent = freeDeliveryCondition + '원 이상 무료배송';
+                document.getElementById('etcdisplay').textContent = first+'만원 이상 무료배송';
+
+                console.log("기존 배송비"+originalDeliveryFee);
                 console.log("무료배송조건:" +freeDeliveryCondition);
+                console.log(first+"만원 이상 무료배송");
 
                 // 합계 계산
                 let total = (price * quantity);
@@ -153,7 +160,12 @@
                             <br>
                             <table>
                                 <tr>
-                                    <input type="hidden" th:value="${#authentication.principal.user.uid}" name="uid">
+                                    <th:block sec:authorize="isAuthenticated()">
+                                        <input type="hidden" th:value="${#authentication.principal.user.uid}" name="uid">
+                                    </th:block>
+                                    <th:block sec:authorize="!isAuthenticated()">
+                                        <input type="hidden" th:value="null" name="uid">
+                                    </th:block>
                                     <th>상품명</th>
                                     <td class="product" id="prodName">[[${product.prodName}]]</td>
                                 </tr>
@@ -163,8 +175,12 @@
                                 </tr>
                                 <tr>
                                     <th>배송비</th>
-                                   <td> <span id="originalFee">[[${product.deliveryfee}]]원</span> <span class="point" id="displayFee"></span><span id ="etc">&nbsp;[[${product.etc}]]원 이상 무료배송</span></td>
-
+                                    <td>
+                                        <span id="originalFee">[[${product.deliveryfee}]]원</span>
+                                        <span class="point" id="displayFee"></span>
+                                        <span id ="etc">[[${product.etc}]]</span>
+                                        <span id ="etcdisplay"></span>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>판매가격</th>

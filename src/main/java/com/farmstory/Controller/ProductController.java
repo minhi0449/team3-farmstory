@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,15 +57,25 @@ public class ProductController {
         return "/market/view";
     }
 
+
     // 상품 목록
-    @GetMapping("/market/list")
-    public String list(Model model) {
+    @GetMapping({"/market/list", "/market/list/type/{type}"})
+    public String list(Model model, @PathVariable(required = false) String type) {
+        // 상품의 총 갯수 계산
+        long count = productService.countAllProducts();
+        model.addAttribute("count", count);
 
-        List<ProductDTO> products = productService.selectProducts();
-        log.info(products.toString());
-        model.addAttribute("products", products);
+        if (type == null) {
+            // 전체 상품 조회
+            List<ProductDTO> products = productService.selectProducts();
+            model.addAttribute("products", products);
+        } else {
+            // 특정 타입 상품 조회
+            List<ProductDTO> productsByType = productService.selectsByType(type);
+            model.addAttribute("products", productsByType);
+        }
 
-        return "/market/list";
+        return "/market/list";  // 뷰 파일 경로
     }
 
     @PostMapping("/market/delete")

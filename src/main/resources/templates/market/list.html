@@ -68,10 +68,22 @@
                             </p>
                         </nav>
                         <ul class="tabs">
-                            <li><a href="#" class="tabs_item">전체(10)</a></li>
-                            <li><a href="#" class="tabs_item item">과일</a></li>
-                            <li><a href="#" class="tabs_item item">야채</a></li>
-                            <li><a href="#" class="tabs_item item item_last">곡류</a></li>
+                            <li>
+                                <a th:href="@{/market/list}"
+                                   th:classappend="${type == null} ? 'tabs_item active' : 'tabs_item'">전체([[${count}]])</a>
+                            </li>
+                            <li>
+                                <a th:href="@{/market/list/type/과일}"
+                                   th:classappend="${type == '과일'} ? 'tabs_item active' : 'tabs_item'">과일</a>
+                            </li>
+                            <li>
+                                <a th:href="@{/market/list/type/채소}"
+                                   th:classappend="${type == '채소'} ? 'tabs_item active' : 'tabs_item'">채소</a>
+                            </li>
+                            <li>
+                                <a th:href="@{/market/list/type/곡류}"
+                                   th:classappend="${type == '곡류'} ? 'tabs_item active item_last' : 'tabs_item item_last item_last'">곡류</a>
+                            </li>
                         </ul>
                         <table class="product_table">
                             <colgroup>

@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -50,12 +52,14 @@
                             <div class="main_top"><h2>상품수정</h2></div>
                             <div class="reg_table">
                                 <table id="product">
+
                                     <input type="hidden" name="prodNo" th:value="${product.prodNo}">
                                     <input type="hidden" name="img1sName" th:value="${product.img1}">
                                     <input type="hidden" name="img2sName" th:value="${product.img2}">
                                     <input type="hidden" name="img3sName" th:value="${product.img3}">
-
-                                    <input type="text" name="uid" value="ghkdtnqls95" readonly>
+                                    <th:block sec:authorize="isAuthenticated()">
+                                        <input type="text" name="uid" th:value="${#authentication.principal.user.uid}" readonly>
+                                    </th:block>
                                     <tr>
                                         <th>상품명</th>
                                         <td><input type="text" name="prodName" th:value ="${product.prodName}"/></td>
@@ -87,7 +91,7 @@
                                     </tr>
                                     <tr>
                                         <th>할인율</th>
-                                        <td><input type="number" id ="discountrate" name="discount" th:value="${product.discount}" min="0" max="100"/>&nbsp;%</td>
+                                        <td><input type="number" id ="discountRate" name="discount" th:value="${product.discount}" min="0" max="100"/>&nbsp;%</td>
                                     </tr>
                                     <tr>
                                         <th>배송비</th>
