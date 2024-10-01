@@ -11,7 +11,7 @@
         </div><!-- .logo -->
 
         <th:block th:if="${!#authentication.principal.equals('anonymousUser')}">
-            <p id="loginSuccess">안녕하세요 [[${#authentication.principal.user.nick}]]님 </p>
+            <p id="loginSuccess">안녕하세요<span class="loginNick"> [[${#authentication.principal.user.nick}]]</span> 님 </p>
         </th:block>
 
         <ul class="utill">
@@ -28,7 +28,7 @@
                 <li><a th:href="@{/user/logout}" id="logout">로그아웃</a></li>
                 <li><a th:href="@{/user/terms}" id="myinfo">나의정보</a></li>
                 <li th:if="${#authentication.principal.user.role =='ADMIN'}">
-                    <a th:href="@{/category/admin/main}" id="admin">관리자</a>
+                    <a th:href="@{/admin/user/list}" id="admin">관리자</a>
                 </li>
                 <li><a th:href="@{/article/list}" id="loginCs">고객센터</a></li>
             </th:block>

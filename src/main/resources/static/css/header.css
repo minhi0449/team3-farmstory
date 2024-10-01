@@ -42,4 +42,5 @@
 .gnb li:nth-of-type(5) a:hover{background-image: url('../images/head_menu5_ov.png');}
 
 
+.loginNick {font-weight: bold;}
 
