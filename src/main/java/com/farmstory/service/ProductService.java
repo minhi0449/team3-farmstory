@@ -189,6 +189,20 @@ public class ProductService {
         productRepository.deleteById(prodNo);
 
     }
+    public long countAllProducts() {
+
+        return productRepository.count();
+    }
+
+    public List<ProductDTO> selectsByType(String type){
+        List<Product> productEntities = productRepository.findByType(type);
+        List<ProductDTO> products = new ArrayList<>();
+        for (Product productEntity : productEntities) {
+            products.add(productEntity.toDTO());
+        }
+        return products;
+    }
 }
+
 
 

@@ -14,6 +14,12 @@
     text-align: left;
 }
 
+/* 진하게 표시할 탭 */
+.tabs_item.active {
+    font-weight: bold;
+    color: #000;
+}
+
 .tabs_item {
     position: relative;
 }
