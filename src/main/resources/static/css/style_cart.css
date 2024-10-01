@@ -54,3 +54,9 @@
 .etc {
     display: none;
 }
+
+.count {
+    width: 30px;
+    height: 15px;
+    text-align: center;
+}

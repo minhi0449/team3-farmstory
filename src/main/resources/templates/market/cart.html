@@ -9,6 +9,10 @@
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/style_cart.css}">
     <script>
+        //count max = 재고량 넣기
+        //input으로 count가 변경될때 소계 변경하기
+        //최종주문시 count 수정
+        //주문하기 데이터베이스 전송 및 세션에 저장
         window.onload = function(){
 
             const counts = document.getElementsByClassName('count');
@@ -25,7 +29,7 @@
             for(let i = 0; i<counts.length; i++) {
                 select_points[i].style.display = 'none';
 
-                const count = parseInt(counts[i].textContent) || 0; //갯수
+                const count = parseInt(counts[i].value) || 0; //갯수
                 const price = parseFloat(prices[i].textContent) || 0; //할인된 가격
                 const select_point = parseFloat(select_points[i].textContent) || 0; //적립되는 포인트률
                 const discount = parseFloat(discounts[i].textContent) || 0; // 나중에 쓸 것 같아서..
@@ -145,7 +149,7 @@
                     const tr = checkBox.closest('tr');
                     if (tr) {
 
-                        const count = parseInt(tr.querySelector('.count').textContent) || 0;
+                        const count = parseInt(tr.querySelector('.count').value) || 0;
                         const discount = parseInt(tr.querySelector('.discount').textContent) || 0; //할인율
                         const price = parseInt(tr.querySelector('.price').textContent) || 0;
                         const orgPrice = parseInt(tr.querySelector('.org_price').textContent) || 0;
@@ -265,7 +269,9 @@
                         <td><img th:src="@{'/productImg/'+${carts.product.img1}}" alt="사과샘플" /></td>
                         <td th:text="${carts.product.type}"></td>
                         <td class="prodName" th:text="${carts.product.prodName}">사과 500g</td>
-                        <td class="count" th:text="${carts.count}"></td>
+                        <td>
+                            <input type="number" class="count" th:value="${carts.count}" min="1" max="100" step="1">
+                        </td>
                         <td class="deliveryFee" th:text="${carts.product.deliveryfee}">배송비</td>
                         <td class="etc" th:text="${carts.product.etc}">이상무료배송</td>
                         <td class="discount" th:text="${carts.product.discount} + '%'"></td>
