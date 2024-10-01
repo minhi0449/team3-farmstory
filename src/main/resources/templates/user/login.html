@@ -53,6 +53,12 @@
                             </tr>
                         </table>
                         <input type="submit" value="로그인" class="btnLogin">
+                        <ul class="snsLogin cf">
+                            <li class="sns cf"><a th:href="@{/oauth2/authorization/google}"><img th:src="@{/images/sns_google(82x24).jpg}" alt="google"></a></li>
+                            <li class="sns cf"><a th:href="@{/oauth2/authorization/kakao}"><img th:src="@{/images/sns_kakao(81x24).jpg}" alt="kakao"></a></li>
+                            <li class="sns cf"><a th:href="@{/oauth2/authorization/naver}"><img th:src="@{/images/sns_naver(81x24).jpg}" alt="naver"></a></li>
+                        </ul>
+
                     </form>
                     <div>
                         <h3>회원 로그인 안내</h3>

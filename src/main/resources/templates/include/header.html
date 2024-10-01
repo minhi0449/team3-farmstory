@@ -9,13 +9,33 @@
         <div class="logo">
             <a th:href="@{/}"><img th:src="@{/images/logo.png}" alt="farmStory logo"></a>
         </div><!-- .logo -->
+
+        <th:block th:if="${!#authentication.principal.equals('anonymousUser')}">
+            <p id="loginSuccess">안녕하세요 [[${#authentication.principal.user.nick}]]님 </p>
+        </th:block>
+
         <ul class="utill">
-            <li><a th:href="@{/}">HOME</a></li>
-            <li sec:authorize="!isAuthenticated()" ><a th:href="@{/user/login}">로그인</a></li>
-            <li><a th:href="@{/user/register}">회원가입</a></li>
-            <li><a th:href="@{/admin/product/list}">관리자상품목록</a></li>
-<!--            <li><a th:href="@{/croptalk/story}">고객센터</a></li>-->
+            <!-- 로그인 -->
+            <li><a th:href="@{/}" id="home">HOME</a></li>
+            <th:block th:if="${#authentication.principal.equals('anonymousUser')}">
+                <li><a th:href="@{/user/login}" id="login">로그인</a></li>
+                <li><a th:href="@{/user/terms}" id="register">회원가입</a></li>
+                <li><a th:href="@{/admin/product/list}" id="adminList">관리자상품목록</a></li>
+                <li><a th:href="@{/article/list}" id="cs">고객센터</a></li>
+            </th:block>
+            <!-- 로그아웃 -->
+            <th:block th:if="${!#authentication.principal.equals('anonymousUser')}">
+                <li><a th:href="@{/user/logout}" id="logout">로그아웃</a></li>
+                <li><a th:href="@{/user/terms}" id="myinfo">나의정보</a></li>
+                <li th:if="${#authentication.principal.user.role =='ADMIN'}">
+                    <a th:href="@{/category/admin/main}" id="admin">관리자</a>
+                </li>
+                <li><a th:href="@{/article/list}" id="loginCs">고객센터</a></li>
+            </th:block>
+
         </ul><!-- .utill -->
+
+
         <div class="h_txt">
             <img th:src="@{/images/head_txt_img.png}" alt="3만원이상 무료배송·팜카드 10%적립">
         </div><!-- .h_txt -->

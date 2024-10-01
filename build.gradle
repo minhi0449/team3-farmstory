@@ -9,7 +9,7 @@ group = 'com.farmstory'
 version = '0.0.2-SNAPSHOT'
 
 processResources {
-    filesMatching('**/application.properties'){
+    filesMatching('**/application-prod.yml'){
         expand(project.properties)
     }
 }

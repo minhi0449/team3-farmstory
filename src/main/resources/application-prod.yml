@@ -1,0 +1,70 @@
+file:
+    upload:
+        path: productImg/
+logging:
+    file:
+        name: /logs/farmstory.log
+    level:
+        com:
+            farmstory: debug
+        org:
+            hibernate:
+                SQL: debug
+                type: trace
+server:
+    port: 8082
+    servlet:
+        context-path: /farmstory
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        password: Helloteam3!
+        url: jdbc:mysql://52.79.123.218:3306/farmstory
+        username: farmstory
+    devtools:
+        livereload:
+            enabled: true
+    jpa:
+        database: mysql
+        hibernate:
+            ddl-auto: update
+            naming:
+                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        properties:
+            hibernate:
+                format_sql: true
+    mail:
+        host: smtp.gmail.com
+        password: crpvlfbmehcpwdro
+        port: 587
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
+                    timeout: 10000
+        username: minhi0449@gmail.com
+    security:
+        oauth2:
+            client:
+                provider:
+                    google:
+                        authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+                        token-uri: https://accounts.google.com/o/oauth2/token
+                        user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+                        user-name-attribute: name
+                registration:
+                    google:
+                        client-id: 949146169145-oqminlempngrsv0rhl14ba257skse4or.apps.googleusercontent.com
+                        client-secret: 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
+                        redirect-uri: http://52.79.123.218:8082/farmstory/login/oauth2/code/google
+                        scope:
+                            - email
+                            - profile
+    servlet:
+        multipart:
+            location: uploads/
+            max-file-size: 10MB
+    thymeleaf:
+        prefix: classpath:/templates
