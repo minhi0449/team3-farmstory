@@ -71,4 +71,8 @@ public class CartService {
             cartRepository.deleteById(No);
         }
     }
+    public long count(){
+        return cartRepository.count();
+
+    }
 }
