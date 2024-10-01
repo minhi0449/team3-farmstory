@@ -32,7 +32,7 @@ public class CartController {
         log.info("cartdto : " + cartdto);
         model.addAttribute("cart", cartdto);
 
-        return "market/cart";
+        return "/market/cart";
     }
 
     @ResponseBody

@@ -6,6 +6,9 @@ import com.farmstory.entity.Product;
 import com.farmstory.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,12 +41,16 @@ public class ProductController {
 
     // 관리자 - 상품 목록
     @GetMapping("/admin/product/list")
-    public String productList(Model model) {
+    public String productList(Model model, @PageableDefault(size = 5) Pageable pageable) {
+        long count = productService.countAllProducts();
+        model.addAttribute("count",count);
 
-       List<ProductDTO> products =productService.selectProducts();
-        log.info(products.toString());
-       model.addAttribute("products", products);
+        Page<ProductDTO> products =productService.selectProductsForPage(pageable);
+        model.addAttribute("products",products.getContent());
 
+        // 현재 페이지 정보와 전체 페이지 수를 전달
+        model.addAttribute("currentPage",pageable.getPageNumber());
+        model.addAttribute("totalPages",products.getTotalPages());
         return "/admin/product/list";
     }
 
@@ -58,25 +65,58 @@ public class ProductController {
     }
 
 
-    // 상품 목록
-    @GetMapping({"/market/list", "/market/list/type/{type}"})
-    public String list(Model model, @PathVariable(required = false) String type) {
-        // 상품의 총 갯수 계산
-        long count = productService.countAllProducts();
-        model.addAttribute("count", count);
 
-        if (type == null) {
-            // 전체 상품 조회
-            List<ProductDTO> products = productService.selectProducts();
-            model.addAttribute("products", products);
-        } else {
-            // 특정 타입 상품 조회
-            List<ProductDTO> productsByType = productService.selectsByType(type);
-            model.addAttribute("products", productsByType);
-        }
-
-        return "/market/list";  // 뷰 파일 경로
+//    @GetMapping({"/market/list", "/market/list/type/{type}"})
+//    public String marketlist(Model model, @PathVariable(required = false) String type) {
+//        // 상품의 총 갯수 계산
+//        long count = productService.countAllProducts();
+//        model.addAttribute("count", count);
+//
+//        if (type == null) {
+//            // 전체 상품 조회
+//            List<ProductDTO> products = productService.selectProducts();
+//            model.addAttribute("products", products);
+//        } else {
+//            // 특정 타입 상품 조회
+//            List<ProductDTO> productsByType = productService.selectsByType(type);
+//            model.addAttribute("products", productsByType);
+//        }
+//
+//        return "/market/list";  // 뷰 파일 경로
+//    }
+@GetMapping({"/market/list", "/market/list/type/{type}"})
+public String list(Model model,
+                   @PathVariable(required = false) String type,
+                   @PageableDefault(size = 5) Pageable pageable) {
+    // 상품의 총 갯수 계산
+    long count = productService.countAllProducts();
+    model.addAttribute("count", count);
+    Page<ProductDTO> products;
+    if (type == null) {
+        // 페이징 처리된 전체 상품 조회
+        products = productService.selectProductsForPage(pageable);
+        model.addAttribute("products", products.getContent());
+    } else {
+        // 특정 타입 상품 페이징 처리 조회
+        products = productService.selectsByTypeForPage(type, pageable);
+        model.addAttribute("products", products.getContent());
     }
+    int totalPages = products.getTotalPages();
+    int currentPage = pageable.getPageNumber() + 1; // 현재 페이지 (0부터 시작하므로 1을 더함)
+
+    int pageBlockSize = 5; // 한 번에 보여줄 페이지 수
+    int startPage = (currentPage - 1) / pageBlockSize * pageBlockSize + 1; // 시작 페이지
+    int endPage = Math.min(startPage + pageBlockSize - 1, totalPages); // 끝 페이지
+
+    model.addAttribute("products", products.getContent());
+    model.addAttribute("currentPage", currentPage);
+    model.addAttribute("totalPages", totalPages);
+    model.addAttribute("startPage", startPage);
+    model.addAttribute("endPage", endPage);
+    model.addAttribute("hasPrev", startPage > 1);
+    model.addAttribute("hasNext", endPage < totalPages);
+    return "/market/list";  // 뷰 파일 경로
+}
 
     @PostMapping("/market/delete")
     public String delete(@RequestParam("prodNo") List<String> products) {
