@@ -300,7 +300,11 @@ main .section{
     margin-top: 11px;
     align-self: self-start;
 }
-
+.modifybtn{
+    position: absolute;
+    margin-left: 50px;
+    margin-top: -2px;
+}
 .btn_group > .insertbtn {
     width: 74px;
     height: 31px;

@@ -7,7 +7,10 @@ import com.farmstory.repository.ProductRepository;
 import com.farmstory.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +34,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
     @Transactional
     public void insertProduct(ProductDTO productDTO, MultipartFile[] images) {
@@ -166,6 +170,17 @@ public class ProductService {
         }
         return productDTOs;
     }
+
+    public Page<ProductDTO> selectProductsForPage(Pageable pageable) {
+        Page<Product> products = productRepository.findAll(pageable);
+        return products.map(Product::toDTO);  // Page<Product>를 Page<ProductDTO>로 변환
+
+    }
+    public Page<ProductDTO> selectsByTypeForPage(String type, Pageable pageable) {
+        Page<Product> productsByType = productRepository.findByType(type, pageable);
+        return productsByType.map(Product::toDTO);  // Page<Product>를 Page<ProductDTO>로 변환
+    }
+
     public ProductDTO findProductById(Integer prodNo) {
         Optional<Product> opt = productRepository.findById(prodNo);
         // Entity 존재 여부 확인
@@ -202,6 +217,8 @@ public class ProductService {
         }
         return products;
     }
+
+
 }
 
 

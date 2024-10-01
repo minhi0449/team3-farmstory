@@ -107,19 +107,26 @@
 
                             <div class="btn_group">
                                 <a href="#" class="deletebtn" onclick="deleteSelected()">선택삭제</a> <!-- 선택삭제 버튼 -->
-                                <a href="#" class="deletebtn" onclick="updateSelected()">선택수정</a>
+                                <a href="#" class="modifybtn" onclick="updateSelected()">선택수정</a>
                                 <a th:href="@{/admin/product/register}" class="insertbtn">상품등록</a>
                             </div><!--btn_group end-->
 
                             <div class="pages">
                                 <ul>
-                                    <li><a href="#">&nbsp;[1]</a></li>
-                                    <li><a href="#">[2]</a></li>
-                                    <li><a href="#">[3]</a></li>
-                                    <li><a href="#">[4]</a></li>
-                                    <li><a href="#">[5]&nbsp;</a></li>
+                                    <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                                        <a th:href="@{/admin/product/list(page=${i})}" th:text="${i + 1}">1 &nbsp;</a>
+                                    </li>
                                 </ul>
                             </div>
+<!--                            <div class="pages">-->
+<!--                                <ul>-->
+<!--                                    <li><a href="#">&nbsp;[1]</a></li>-->
+<!--                                    <li><a href="#">[2]</a></li>-->
+<!--                                    <li><a href="#">[3]</a></li>-->
+<!--                                    <li><a href="#">[4]</a></li>-->
+<!--                                    <li><a href="#">[5]&nbsp;</a></li>-->
+<!--                                </ul>-->
+<!--                            </div>-->
                         </div><!--status-table end-->
                     </div><!--main-container-->
                 </section><!-- section end-->

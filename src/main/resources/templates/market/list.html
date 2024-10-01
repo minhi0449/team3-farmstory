@@ -129,13 +129,27 @@
                         </table>
                         <div class="pages">
                             <ul>
-                                <li><a href="#" class="no current">&nbsp;[1]</a></li>
-                                <li><a href="#" class="no">[2]</a></li>
-                                <li><a href="#" class="no">[3]</a></li>
-                                <li><a href="#" class="no">[4]</a></li>
-                                <li><a href="#" class="no last_no">[5]&nbsp;</a></li>
+                                <!-- 이전 버튼 -->
+                                <li th:if="${hasPrev}">
+                                    <a th:href="@{/market/list(page=${startPage - 2})}">이전 < </a>
+                                </li>
+
+                                <!-- 페이지 번호 표시 -->
+                                <li th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                                    <a th:href="@{/market/list(page=${i - 1})}"
+                                       th:classappend="${i == currentPage} ? 'active' : ''">
+                                        <!-- 페이지 번호를 [ ]로 감싸기 -->
+                                        <span th:text="'[' + ${i} + ']'"></span>
+                                    </a>
+                                </li>
+
+                                <!-- 다음 버튼 -->
+                                <li th:if="${hasNext}">
+                                    <a th:href="@{/market/list(page=${endPage})}">다음</a>
+                                </li>
                             </ul>
                         </div>
+
                     </div><!-- .articleIn -->
                 </article><!-- .article -->
             </section>
