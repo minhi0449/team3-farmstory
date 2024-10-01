@@ -42,6 +42,8 @@
 
             }
 
+
+
             //제목줄 체크박스
             const checkAll = document.querySelector('.checkbox');
             //제목줄 제외 체크박스
@@ -56,15 +58,35 @@
                 if(isChecked){
                     for(const checkBox of checkBoxes){
                         checkBox.checked = true;
+                        updateTotal();
                     }
                 // 전체해제
                 }else {
                     for(const checkBox of checkBoxes){
                         checkBox.checked = false;
+                        updateTotal();
                     }
                 }
             })
 
+            //2. 선택항목 체크박스 클릭시 제목줄 체크박스 업데이트
+            const checkBoxes = document.querySelectorAll('.checkboxes');
+
+            checkBoxes.forEach(checkBox => {
+                checkBox.addEventListener('click' , function (){
+                    const checkCount = document.querySelectorAll('.checkboxes:checked').length;
+                    if(checkCount === checkBoxes.length){
+                        checkAll.checked = true;
+                    }else {
+                        checkAll.checked = false;
+                    }
+                })
+            })
+
+
+
+
+            // 선택한 체크박스 삭제
             btnDelete.onclick = function(e){
                 e.preventDefault();
 
@@ -106,14 +128,73 @@
                         alert('오류발생');
                     })
 
+            } //체크박스 삭제 끝
+
+            // 합계 계산
+            function updateTotal() {
+                const checks = document.querySelectorAll('.checkboxes:checked');
+                let totalCount = 0; //상품수
+                let totalProduct = 0; //상품금액
+                let totalDiscount = 0; //할인금액
+                let totalDeliveryFee = 0; // 배송비
+                let totalPoint = 0; // 포인트
+                let resultPrice = 0;
+
+
+                checks.forEach(checkBox => {
+                    const tr = checkBox.closest('tr');
+                    if (tr) {
+
+                        const count = parseInt(tr.querySelector('.count').textContent) || 0;
+                        const discount = parseInt(tr.querySelector('.discount').textContent) || 0; //할인율
+                        const price = parseInt(tr.querySelector('.price').textContent) || 0;
+                        const orgPrice = parseInt(tr.querySelector('.org_price').textContent) || 0;
+                        let delivery = parseInt(tr.querySelector('.deliveryFee').textContent) || 0;
+                        const etc = parseInt(tr.querySelector('.etc').textContent) || 0;
+
+                        totalCount += count;
+                        totalProduct += orgPrice * count; //상품가격
+                        totalDiscount += (discount * orgPrice / 100) * count; //할인받는 가격
+                        totalPoint += Math.floor(price * (parseFloat(tr.querySelector('.select_point').textContent) / 100) * count); // 포인트 계산
+                        let totalPrice = ((orgPrice * count) - ((discount * orgPrice / 100) * count)); // 소계
+
+
+
+                        if(totalPrice >= etc){
+                            delivery = 0;
+                        } {
+                            totalDeliveryFee += delivery;
+                        }
+                        resultPrice += totalPrice + delivery;
+                    }
+                })
+                // dom 업뎃
+                document.querySelector('.product_delivery_fee').textContent = totalDeliveryFee.toLocaleString()+'원';
+                document.querySelector('.product_count').textContent = totalCount;
+                document.querySelector('.product_price').textContent = totalProduct.toLocaleString()+'원';
+                document.querySelector('.product_discount').textContent = totalDiscount.toLocaleString()+'원';
+                document.querySelector('.product_point').textContent = totalPoint.toLocaleString()+'원';
+                document.querySelector('.product_total').textContent = resultPrice.toLocaleString()+'원';
 
             }
 
+                //체크박스 클릭시 합계 업데이트
+                const checkBoxUpdate = document.querySelectorAll('.checkboxes');
+                checkBoxUpdate.forEach(checkBox => {
+                    checkBox.addEventListener('click' , updateTotal);
+                });
 
 
 
 
-        }
+
+
+
+
+
+
+
+        } //onload 끝
 
     </script>
 </head>
@@ -152,7 +233,7 @@
                     </p><!-- .location -->
                 </nav>
 
-                <h3 class="tb_tit">장바구니 전체(10)</h3><!-- .tb_tit -->
+                <h3 class="tb_tit" th:text ="'장바구니 전체('+${count}+')'">장바구니 전체(10)</h3><!-- .tb_tit -->
                 <table class="tb1">
                     <colgroup>
                         <col style="width: 11%">
@@ -185,6 +266,8 @@
                         <td th:text="${carts.product.type}"></td>
                         <td class="prodName" th:text="${carts.product.prodName}">사과 500g</td>
                         <td class="count" th:text="${carts.count}"></td>
+                        <td class="deliveryFee" th:text="${carts.product.deliveryfee}">배송비</td>
+                        <td class="etc" th:text="${carts.product.etc}">이상무료배송</td>
                         <td class="discount" th:text="${carts.product.discount} + '%'"></td>
                         <td class="point"></td>
                         <td class="select_point" th:text="${carts.product.point}"></td>
@@ -203,27 +286,27 @@
                         </tr>
                         <tr>
                             <td>상품수</td>
-                            <td class="product_count">1</td>
+                            <td class="product_count">0원</td>
                         </tr>
                         <tr>
                             <td>상품금액</td>
-                            <td class="product_price">27,000</td>
+                            <td class="product_price">0원</td>
                         </tr>
                         <tr>
                             <td>할인금액</td>
-                            <td class="product_discount">5,0000원</td>
+                            <td class="product_discount">0원</td>
                         </tr>
                         <tr>
                             <td>배송비</td>
-                            <td class="product_delivery_fee">5,0000원</td>
+                            <td class="product_delivery_fee">0원</td>
                         </tr>
                         <tr>
                             <td>포인트</td>
-                            <td class="product_point">4,000원</td>
+                            <td class="product_point">0원</td>
                         </tr>
                         <tr>
                             <td>전체주문금액</td>
-                            <td class="product_total">22,000</td>
+                            <td class="product_total">0원</td>
                         </tr>
                     </table><!-- .tb2 -->
                     <button class="btn_order"><a th:href="@{/market/order}">주문하기</a></button>

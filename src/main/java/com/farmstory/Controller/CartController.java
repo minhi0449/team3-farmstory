@@ -27,6 +27,9 @@ public class CartController {
     // cart
     @GetMapping("/market/cart")
     public String cart(@RequestParam String uid, Model model) {
+        long count = cartService.count();
+        model.addAttribute("count", count);
+
         log.info("uid :" + uid);
         List<CartResponseDTO> cartdto = cartService.selectAllCartByUid(uid);
         log.info("cartdto : " + cartdto);
