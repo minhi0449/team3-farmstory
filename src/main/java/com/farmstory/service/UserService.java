@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -78,6 +79,18 @@ public class UserService {
             return user.toDTO();
         }
         return null;
+    }
+
+    //유저 정보 전체 가져오기
+    public List<UserDTO> selectUsers(){
+
+        List<User> userall = userRepository.findAll();
+
+        List<UserDTO> users = userall
+                .stream()
+                .map(entity -> entity.toDTO())
+                .collect(Collectors.toList());
+        return users;
     }
 
     public List<UserDTO> selectAllUsers() {

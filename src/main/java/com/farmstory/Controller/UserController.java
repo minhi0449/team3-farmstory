@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -71,7 +72,7 @@ public class UserController {
     }
 
 
-    // Terms
+    // Terms 이용약관
     @GetMapping("/user/terms")
     public String terms(Model model) {
         TermsDTO termsDTO = userService.selectTerms();
@@ -153,7 +154,14 @@ public class UserController {
         }
     }
 
-
+    // admin 관리자 회원목록
+    @GetMapping("/admin/list")
+    public String AdminUser(Model model) {
+        List<UserDTO> userDTO = userService.selectUsers();
+        log.info(userDTO);
+        model.addAttribute("userDTO", userDTO);
+        return "/admin/user/list";
+    }
 
 
 
