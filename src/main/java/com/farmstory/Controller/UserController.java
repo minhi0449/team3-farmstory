@@ -154,17 +154,6 @@ public class UserController {
         }
     }
 
-    // admin 관리자 회원목록
-    @GetMapping("/admin/list")
-    public String AdminUser(Model model) {
-        List<UserDTO> userDTO = userService.selectUsers();
-        log.info(userDTO);
-        model.addAttribute("userDTO", userDTO);
-        return "/admin/user/list";
-    }
-
-
-
 
 
 }

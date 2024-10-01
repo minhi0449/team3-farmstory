@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @NoArgsConstructor
@@ -28,6 +29,8 @@ public class User {
     private String addr1;
     private String addr2;
     private String regip;
+
+    @CreationTimestamp
     private String createAt;
     private String deletedAt;
 
