@@ -1,0 +1,7 @@
+spring:
+    application:
+        name: farmstory
+        version: 0.0.2
+    profiles:
+        active: dev
+        include: local

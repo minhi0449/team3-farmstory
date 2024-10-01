@@ -39,6 +39,10 @@
     border: 1px solid #bebebe;
 }
 
+.login .snsLogin {width: 256px; margin: 0 auto;}
+.login .snsLogin li{ float: left; margin: 15px 6px 0 0;}
+.login .snsLogin li:last-of-type{margin-right: 0;}
+
 .login > div {
     width: 100%;
     height: 104px;

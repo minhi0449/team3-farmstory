@@ -58,7 +58,8 @@ public class SecurityConfig {
         http.logout(logout -> logout
                 .invalidateHttpSession(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                .logoutSuccessUrl("/user/login?success=101"));
+                .logoutSuccessUrl("/"));
+                // .logoutSuccessUrl("/user/login?success=101"));
 
         // OAuth2 설정
         http.oauth2Login(login -> login.loginPage("/user/login")
@@ -68,7 +69,11 @@ public class SecurityConfig {
 
         // 인가 설정
         http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/article/**").authenticated()
+                .requestMatchers("/").permitAll()
+                .requestMatchers("/article/**").permitAll()
+                .requestMatchers("/category/**").permitAll()
+                .requestMatchers("/article/write").authenticated()
+                .requestMatchers("/article/delete/**").authenticated()
                 .requestMatchers("/user/**").permitAll()
                 .anyRequest().permitAll());
 
@@ -76,10 +81,19 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
+
+//           .authorizeHttpRequests((requests) -> requests
+//                .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()  // 정적 리소스 허용
+//                .requestMatchers("/", "/index", "/**").permitAll()  // 인증 없이 접근 허용할 경로
+//                .anyRequest().permitAll() // 그 외의 요청은 인증 필요
+//        )
+
+
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        //평문을 암호화시킬때 암호문 만들때 도와주는 encoder
         return new BCryptPasswordEncoder();
     }
 
