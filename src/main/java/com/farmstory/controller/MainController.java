@@ -2,9 +2,13 @@ package com.farmstory.controller;
 
 
 import com.farmstory.dto.ProductDTO;
+import com.farmstory.security.MyUserDetails;
 import com.farmstory.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +26,5 @@ public class MainController {
         log.info(products.toString());
         model.addAttribute("products", products);
         return "/index";
-
     }
 }

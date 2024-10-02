@@ -3,10 +3,13 @@ package com.farmstory.controller;
 
 import com.farmstory.dto.CartRequestDTO;
 import com.farmstory.dto.CartResponseDTO;
+import com.farmstory.entity.User;
+import com.farmstory.security.MyUserDetails;
 import com.farmstory.service.CartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -50,9 +53,13 @@ public class CartController {
                 .body(dto);
     }
     @GetMapping("/market/order")
-    public String order() {
-        // TODO: 사용자의 정보 가져와야함(name, hp, point)
-
+    public String order(@AuthenticationPrincipal MyUserDetails userDetails, Model model) {
+        if(userDetails == null)
+        {
+            return "redirect:/login";
+        }
+        User user = userDetails.getUser();
+        model.addAttribute("user", user);
         return "/market/order";
     }
     @ResponseBody

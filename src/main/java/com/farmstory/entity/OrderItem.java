@@ -21,6 +21,8 @@ public class OrderItem {
     private int discount;
     private int deliveryfee;
     private int count;
+
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orderNo")
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -33,6 +35,7 @@ public class OrderItem {
 
     public void registerOrder(Order order) {
         this.order = order;
+        order.getOrderItems().add(this);
     }
 
     public void registerProduct(Product product) {

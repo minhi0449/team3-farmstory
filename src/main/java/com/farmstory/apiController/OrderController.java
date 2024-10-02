@@ -2,6 +2,8 @@ package com.farmstory.apiController;
 
 import com.farmstory.dto.order.OrderCreateRequestDTO;
 import com.farmstory.dto.order.OrderCreateResponseDTO;
+import com.farmstory.dto.order.OrderGetResponseDTO;
+import com.farmstory.dto.order.OrderGetResponseWithPriceDTO;
 import com.farmstory.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,5 +23,11 @@ public class OrderController {
         log.debug("orderDTO = {}", orderDTO.getOrderItems());
         int orderId = orderService.createOrder(orderDTO);
         return ResponseEntity.status(201).body(new OrderCreateResponseDTO(orderId)) ;
+    }
+
+    @GetMapping("/{orderNo}")
+    public ResponseEntity<OrderGetResponseWithPriceDTO> getOrder(@PathVariable("orderNo") int orderNo) {
+        OrderGetResponseWithPriceDTO order = orderService.getOrderByIdWithPrice(orderNo);
+        return ResponseEntity.status(200).body(order) ;
     }
 }

@@ -17,4 +17,9 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Integer> {
 
     @Query("SELECT oi FROM OrderItem oi join fetch oi.product join fetch oi.order WHERE oi.order.orderNo = :orderNo")
     List<OrderItem> findByOrderNo(@Param("orderNo") int orderNo);
+
+
+    @EntityGraph(attributePaths = {"product", "order", "order.user"})
+    @Query("SELECT oi FROM OrderItem oi WHERE oi.order.user.uid = :uid")
+    Page<OrderItem> findByUidWithOrderAndProduct(@Param("uid") String uid, Pageable pageable);
 }

@@ -35,6 +35,16 @@ public class OrderService {
         return OrderGetResponseDTO.fromEntity(order);
     }
 
+    public OrderGetResponseWithPriceDTO getOrderByIdWithPrice(int id) {
+        Optional<Order> findOrder = orderRepository.findByIdWithPrice(id);
+        Order order = findOrder.orElseThrow(() -> new IllegalArgumentException("해당 주문이 존재하지 않습니다."));
+        int totalPrice = order.getOrderItems().stream()
+                .mapToInt(orderItem -> orderItem.getPrice() * orderItem.getCount())
+                .sum();
+
+        return OrderGetResponseWithPriceDTO.fromEntity(order, totalPrice);
+    }
+
     public PageResponseDTO<OrderItemsGetResponseDTO> getOrderItems(Pageable pageable) {
         Page<OrderItem> orderItems = orderItemRepository.findAll(pageable);
         Page<OrderItemsGetResponseDTO> dtoPage = orderItems.map(OrderItemsGetResponseDTO::fromEntity);
@@ -43,8 +53,17 @@ public class OrderService {
 
     public PageResponseDTO<OrderItemsGetResponseDTO> getOrderItemsByOrderNo(int orderNo, Pageable pageable) {
         Page<OrderItem> orderItems = orderItemRepository.findByOrderNo(orderNo, pageable);
-        Page<OrderItemsGetResponseDTO> dtoPage = orderItems.map(OrderItemsGetResponseDTO::fromEntity);
-        return PageResponseDTO.fromPage(dtoPage);
+        Page<OrderItemsGetResponseDTO> orderItemDto = orderItems.map(OrderItemsGetResponseDTO::fromEntity);
+        return PageResponseDTO.fromPage(orderItemDto);
+    }
+
+    public PageResponseDTO<OrderItemsGetByUidResponseDTO> getOrderItemsByUid(String uid, Pageable pageable) {
+        System.out.println("uid = " + uid);
+        System.out.println("pageable = " + pageable);
+        Page<OrderItem> orderItems = orderItemRepository.findByUidWithOrderAndProduct(uid, pageable);
+        System.out.println("orderItems = " + orderItems.getContent());
+        Page<OrderItemsGetByUidResponseDTO> orderItemDto = orderItems.map(OrderItemsGetByUidResponseDTO::fromEntity);
+        return PageResponseDTO.fromPage(orderItemDto);
     }
 
     @Transactional
