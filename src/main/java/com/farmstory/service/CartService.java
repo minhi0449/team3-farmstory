@@ -32,7 +32,7 @@ public class CartService {
 
     public CartRequestDTO insertCart(CartRequestDTO cartRequestDTO) {
         System.out.println("cartRequestDTO = " + cartRequestDTO);
-            Optional<Cart> existcart = cartRepository.findByProductProdNo(cartRequestDTO.getProduct_id());
+            Optional<Cart> existcart = cartRepository.findByProductProdNoAndUserUid(cartRequestDTO.getProduct_id(), cartRequestDTO.getUid());
             Cart cart = null;
             if(existcart.isPresent()) {
                 System.out.println("있음");
@@ -42,9 +42,8 @@ public class CartService {
             }else {
                 System.out.println("없음");
                 Product product = productRepository.findById(cartRequestDTO.getProduct_id());
-              User user = User.builder()
-                        .uid(cartRequestDTO.getUid())
-                        .build();
+                User user = userRepository.findById(cartRequestDTO.getUid()).orElseThrow(() -> new RuntimeException("해당 유저가 없습니다."));
+
                 if(product != null) {
                     cart = cartRequestDTO.toEntity();
                     cart.addProduct(product);

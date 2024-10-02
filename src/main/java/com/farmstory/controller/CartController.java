@@ -27,7 +27,7 @@ public class CartController {
 
     // cart
     @GetMapping("/market/cart")
-    public String cart(@RequestParam String uid, Model model) {
+    public String cart(@RequestParam("uid") String uid, Model model) {
         long count = cartService.count();
         model.addAttribute("count", count);
 

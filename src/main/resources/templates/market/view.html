@@ -88,6 +88,7 @@
                 const prodNo = document.getElementById('prodNo').textContent.trim();
                 const quantity = parseInt(document.getElementById('quantity').value);
 
+                console.log("prodNo : " + prodNo);
                 console.log("quantity : " + quantity);
 
                 const user = document.getElementsByName('uid')[0].value;
@@ -98,7 +99,7 @@
 
                 }
                 const data = await fetchPost('/farmstory/market/cart', JsonData)
-
+                console.log("-------")
                 console.log(data);
                 if(data.count > 0){
                     const moveCart = confirm('상품이 담겼습니다. 장바구니로 이동하시겠습니까?');
