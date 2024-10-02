@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../css/common.css">
     <link rel="stylesheet" href="../css/footer.css">
     <link rel="stylesheet" href="../css/order.css">
+
     <script th:inline="javascript">
         let totalItems = 0;
         let totalPrice = 0;
@@ -95,66 +96,82 @@
         function updateOrderTable(carts) {
             const table = document.querySelector('.tb1');
             table.innerHTML = `
-        <colgroup>
-            <col style="width: 10%">
-            <col style="width: 12%">
-            <col style="width: 28%">
-            <col style="width: 10%">
-            <col style="width: 10%">
-            <col style="width: 10%">
-            <col style="width: 10%">
-            <col style="width: 10%">
-        </colgroup>
-        <tr>
-            <th>이미지</th>
-            <th>종류</th>
-            <th>상품명</th>
-            <th>수량</th>
-            <th>할인</th>
-            <th>포인트</th>
-            <th>가격</th>
-            <th>소계</th>
-        </tr>`;
-
+    <colgroup>
+        <col style="width: 10%">
+        <col style="width: 12%">
+        <col style="width: 28%">
+        <col style="width: 10%">
+        <col style="width: 10%">
+        <col style="width: 10%">
+        <col style="width: 10%">
+        <col style="width: 10%">
+    </colgroup>
+    <tr>
+        <th>이미지</th>
+        <th>종류</th>
+        <th>상품명</th>
+        <th>수량</th>
+        <th>할인</th>
+        <th>포인트</th>
+        <th>가격</th>
+        <th>소계</th>
+    </tr>`;
 
             carts.forEach(cart => {
                 const quantity = cart.count || 1;
-
                 const tr = document.createElement('tr');
 
-                // 필요한 필드를 사용하여 렌더링
-                const subtotal = cart.product.price * quantity - (cart.product.price * cart.product.discount / 100) * quantity;
-                const points = cart.product.price * 0.01 * quantity; // 포인트 계산 (가격의 1%)
+                // 할인 계산
+                const discount = cart.product.discount || 0;
+                const price = cart.product.price || 0;
+                const discountedPrice = price - (price * (discount / 100));
+                const subtotal = discountedPrice * quantity;
+
+                // 배송비 계산 (소계가 30,000원 이상이면 0원, 아니면 기존 배송비 적용)
+                let deliveryFee = cart.product.deliveryfee;
+                if (subtotal >= 30000) {
+                    deliveryFee = 0;
+                }
+
+                // 포인트 계산
+                const points = Math.floor(discountedPrice * 0.01 * quantity);
 
                 totalItems += quantity;
-                totalPrice +=  Number(cart.product.price) * Number(quantity);
-                totalDiscount += (cart.product.price * cart.product.discount / 100) * quantity;
-                totalDeliveryfee += cart.product.deliveryfee;
+                totalPrice += price * quantity;
+                totalDiscount += (price * (discount / 100)) * quantity;
+                totalDeliveryfee += deliveryFee;
                 totalPoints += points;
 
+                // 가격과 소계 표시 (할인 적용)
                 tr.innerHTML = `
-            <td><img src="/farmstory/productImg/${cart.product.img1}" alt="${cart.product.prodName}" /></td>
-            <td>${cart.product.type}</td>
-            <td>${cart.product.prodName}</td>
-            <td>${quantity}</td> <!-- 수량을 클라이언트에서 사용 -->
-            <td>${cart.product.discount}%</td>
-            <td>${points.toLocaleString()}p</td> <!-- 포인트를 5%로 계산 -->
-            <td>${cart.product.price.toLocaleString()}</td>
-            <td><strong>${subtotal.toLocaleString()}</strong>원</td>
-        `;
+        <td><img src="/farmstory/productImg/${cart.product.img1}" alt="${cart.product.prodName}" /></td>
+        <td>${cart.product.type}</td>
+        <td>${cart.product.prodName}</td>
+        <td>${quantity}</td>
+        <td>${discount}%</td>
+        <td>${points.toLocaleString()}p</td>
+        <td>
+            <span style="text-decoration: line-through; color: #888;">${price.toLocaleString()}원</span><br>
+            <span style="color: #d9534f;"><strong>${discountedPrice.toLocaleString()}원</strong></span>
+        </td>
+        <td><strong>${subtotal.toLocaleString()}</strong>원</td>
+    `;
 
                 table.appendChild(tr);
             });
 
             // 주문 요약 정보 업데이트
-            document.querySelector('.tb2 tr:nth-child(2) td:nth-child(2)').textContent = totalItems; // 상품수
-            document.querySelector('.tb2 tr:nth-child(3) td:nth-child(2)').textContent = `${totalPrice.toLocaleString()}원`; // 상품금액
-            document.querySelector('.tb2 tr:nth-child(4) td:nth-child(2)').textContent = `${totalDiscount.toLocaleString()}원`; // 할인금액
-            document.querySelector('.tb2 tr:nth-child(5) td:nth-child(2)').textContent = `${totalDeliveryfee.toLocaleString()}원`; // 배송비
-            document.querySelector('.tb2 tr:nth-child(6) td:nth-child(2)').textContent = `${totalPoints.toLocaleString()}원`; // 포인트
+            document.querySelector('.tb2 tr:nth-child(2) td:nth-child(2)').textContent = totalItems;
+            document.querySelector('.tb2 tr:nth-child(3) td:nth-child(2)').textContent = `${totalPrice.toLocaleString()}원`;
+            document.querySelector('.tb2 tr:nth-child(4) td:nth-child(2)').textContent = `${totalDiscount.toLocaleString()}원`;
+            document.querySelector('.tb2 tr:nth-child(5) td:nth-child(2)').textContent = `${totalDeliveryfee.toLocaleString()}원`;
+            document.querySelector('.tb2 tr:nth-child(6) td:nth-child(2)').textContent = `${totalPoints.toLocaleString()}원`;
+
             totalOrderAmount = totalPrice - totalDiscount + totalDeliveryfee;
-            document.querySelector('.tb2 tr:nth-child(7) td:nth-child(2)').textContent = `${totalOrderAmount.toLocaleString()}원`; // 전체주문금액
+            document.querySelector('.tb2 tr:nth-child(7) td:nth-child(2)').textContent = `${totalOrderAmount.toLocaleString()}원`;
         }
+
+
 
         function getPaymentMethodValue() {
             // 클래스가 'payment-method'인 모든 체크박스 요소 선택

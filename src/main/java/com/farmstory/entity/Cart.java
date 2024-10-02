@@ -3,6 +3,8 @@ package com.farmstory.entity;
 import com.farmstory.dto.CartRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Setter
 @Getter

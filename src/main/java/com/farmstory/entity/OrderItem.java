@@ -42,4 +42,8 @@ public class OrderItem {
     public void registerProduct(Product product) {
         this.product = product;
     }
+
+    public void changeDeliveryfee(int deliveryfee) {
+        this.deliveryfee = deliveryfee;
+    }
 }

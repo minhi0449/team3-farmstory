@@ -97,6 +97,8 @@ public class OrderService {
             // 제품의 재고를 줄인다
             product.decreaseStock(orderItemDto.getCount());
 
+            // 할인된 가격 계산
+            int discountedPrice = product.getPrice() - (product.getPrice() * product.getDiscount() / 100);
 
             // 주문 아이템을 엔티티로 변환 후 주문과 제품의 관계를 연결한다.
             OrderItem orderItem = orderItemDto.toEntity();
@@ -104,6 +106,17 @@ public class OrderService {
             orderItem.registerProduct(product);
 
             // 주문 아이템을 생성
+            orderItemRepository.save(orderItem);
+
+            // 주문 아이템 소계 계산 (할인된 가격 * 수량)
+            int itemSubtotal = discountedPrice * orderItem.getCount();
+
+            // 주문 아이템의 소계가 30,000원 이상이면 배송비를 0으로 설정
+            if (itemSubtotal >= 30000) {
+                orderItem.changeDeliveryfee(0); // 배송비를 0으로 설정
+            }
+
+            // 주문 아이템 업데이트
             orderItemRepository.save(orderItem);
         });
 
