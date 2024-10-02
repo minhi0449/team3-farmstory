@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="../css/common.css">
     <link rel="stylesheet" href="../css/footer.css">
     <link rel="stylesheet" href="../css/my-page_order.css">
+    <style>
+        .active > a {
+            background:#8C8C8C !important;
+        }
+    </style>
 </head>
 <body>
 <!-- #header -->
@@ -45,7 +50,7 @@
                     </p><!-- .location -->
                 </nav>
 
-                <h3 class="tb_tit">주문상춤 전체(10)</h3><!-- .tb_tit -->
+                <h3 class="tb_tit" th:text="|주문상품 전체(${orderItemCount})|">주문상품 전체(10)</h3><!-- .tb_tit -->
                 <table class="tb1">
                     <colgroup>
                         <col style="width: 10%">
@@ -84,6 +89,34 @@
                         <td><button class="detail-btn" th:data-order-id="${orderItem.order.orderNo}">[상세확인]</button></td>
                     </tr>
                 </table><!-- .tb1 -->
+                <div class="pagination" style="text-align: center; margin-top: 20px;">
+                    <ul style="list-style-type: none; padding: 0; display: inline-block;">
+                        <!-- 이전 페이지 버튼 -->
+                        <li style="display: inline; margin-right: 10px;" th:if="${orderItemPage.currentPage > 0}">
+                            <a th:href="@{/my-page/order(page=${orderItemPage.currentPage - 1}, size=${orderItemPage.pageSize})}"
+                               style="text-decoration: none; padding: 8px 12px; border: 1px solid #ccc; background-color: #f0f0f0; border-radius: 4px;">이전</a>
+                        </li>
+
+                        <!-- 페이지 번호 버튼 -->
+                        <li th:each="pageNum : ${#numbers.sequence(0, orderItemPage.totalPages - 1)}"
+                            th:classappend="${pageNum == orderItemPage.currentPage} ? 'active' : ''"
+                            style="display: inline; margin-right: 10px;">
+                            <a th:href="@{/my-page/order(page=${pageNum}, size=${orderItemPage.pageSize})}"
+                               th:text="${pageNum + 1}"
+                               th:style="'text-decoration: none; padding: 8px 12px; border: 1px solid #ccc; background-color: ' +
+                          (pageNum == orderItemPage.currentPage ? '#007bff' : '#f0f0f0') + '; color: ' +
+                          (pageNum == orderItemPage.currentPage ? '#fff' : '#000') + '; border-radius: 4px;'">
+                            </a>
+                        </li>
+
+                        <!-- 다음 페이지 버튼 -->
+                        <li style="display: inline; margin-right: 10px;" th:if="${!orderItemPage.isLast}">
+                            <a th:href="@{/my-page/order(page=${orderItemPage.currentPage + 1}, size=${orderItemPage.pageSize})}"
+                               style="text-decoration: none; padding: 8px 12px; border: 1px solid #ccc; background-color: #f0f0f0; border-radius: 4px;">다음</a>
+                        </li>
+                    </ul>
+                </div>
+
             </div><!-- .articleIn -->
         </article><!-- .article -->
     </section>

@@ -28,7 +28,9 @@ public class MyPageController {
         }
 
         PageResponseDTO<OrderItemWithOrderWithProductResponseDTO> orderItemsByUid = orderService.getOrderItemsByUid(userDetails.getUsername(), pageable);
+        int orderItemCount = orderService.getOrderItemCountByUid(userDetails.getUsername());
         model.addAttribute("orderItemPage", orderItemsByUid );
+        model.addAttribute("orderItemCount", orderItemCount );
         return "/my-page/order";
     }
 }

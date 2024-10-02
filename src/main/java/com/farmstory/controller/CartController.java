@@ -74,7 +74,6 @@ public class CartController {
 
         model.addAttribute("user", user);
         model.addAttribute("carts", carts);
-
         return "/market/order";
     }
 

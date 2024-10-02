@@ -81,7 +81,7 @@
                                 throw new Error(errorData.message);
                             }
 
-                            // location.href = "/farmstory/market/list";
+                            location.href = "/farmstory";
                         } catch (e) {
                             alert("주문을 실패했습니다.")
                             console.error(e.message)
@@ -219,7 +219,7 @@
                     </p><!-- .location -->
                 </nav>
 
-                <h3 class="tb_tit">주문상춤 전체(10)</h3><!-- .tb_tit -->
+                <h3 class="tb_tit" th:text="|주문상품 전체(${carts.size()})|">주문상품 전체(10)</h3><!-- .tb_tit -->
                 <table class="tb1">
                     <colgroup>
                         <col style="width: 10%">

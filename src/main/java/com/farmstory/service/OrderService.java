@@ -112,4 +112,8 @@ public class OrderService {
 
         return order.getOrderNo();
     }
+
+    public int getOrderItemCountByUid(String uid) {
+        return orderItemRepository.countByUid(uid);
+    }
 }
