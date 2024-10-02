@@ -62,4 +62,6 @@
 /* btn -  취소, 회원가입 */
 .btn {display: block; float:left; box-sizing: border-box; height: 35px; line-height: 35px; text-align: center; border: 1px solid #bebebe; background: #fff;}
 .btnCancel {width: 42px;}
+.btnCancel:hover {color:#fff; border: 1px solid #555; background: #555; transition: all 0.4s;}
 .btnSubmit {width: 62px; margin-left: 3px; cursor: pointer; background: #efefef;}
+.btnSubmit:hover {color:#fff; border: 1px solid #315519; background: #315519; transition: all 0.4s;}

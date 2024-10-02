@@ -1,6 +1,5 @@
 package com.farmstory.entity;
 
-import com.farmstory.dto.UserDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -34,22 +33,45 @@ public class User {
     private String createAt;
     private String deletedAt;
 
-    public UserDTO toDTO() {
-        return UserDTO.builder()
-                .uid(uid)
-                .name(name)
-                .role(role)
-                .pass(pass)
-                .nick(nick)
-                .email(email)
-                .hp(hp)
-                .grade(grade)
-                .zip(zip)
-                .addr1(addr1)
-                .addr2(addr2)
-                .regip(regip)
-                .createdAt(createAt)
-                .deletedAt(deletedAt)
-                .build();
+    // 추가 필드
+    private String encodedPassword;
+
+//    public UserDTO toDTO() {
+//        return UserDTO.builder()
+//                .uid(uid)
+//                .name(name)
+//                .role(role)
+//                .pass(pass)
+//                .nick(nick)
+//                .email(email)
+//                .hp(hp)
+//                .grade(grade)
+//                .zip(zip)
+//                .addr1(addr1)
+//                .addr2(addr2)
+//                .regip(regip)
+//                .createdAt(createAt)
+//                .deletedAt(deletedAt)
+//                .build();
+//    }
+
+    // 탈퇴 회원을 위한 생성자
+    public void UserDTO(String uid, String createAt, String deletedAt, String role) {
+        this.uid = uid;
+        this.createAt = createAt;
+        this.deletedAt = deletedAt;
+        this.role = role;
+        this.name = null;
+        this.email = null;
+        this.pass = null;
+        this.nick = null;
+        this.hp = null;
+        this.zip = null;
+        this.addr1 = null;
+        this.addr2 = null;
+        this.regip = null;
+    }
+
+    public void setPass(String encodedPassword) {
     }
 }

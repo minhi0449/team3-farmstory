@@ -76,4 +76,11 @@
     position: absolute;
     bottom: 14px;
     right: 0;
+    width: 54px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    background: #4B545E;
+    border: 1px solid #3B3C3F;
+    color:#fff;
 }

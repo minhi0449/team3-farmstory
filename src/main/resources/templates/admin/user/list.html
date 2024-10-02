@@ -49,16 +49,16 @@
                                             <td th:text="${user.hp}"></td>
                                             <td>
                                                 <select class="usergrade" th:data-id="${user.uid}">
-                                                    <option value="ADMIN" th:selected="${user.role}=='ADMIN'">1</option>
-                                                    <option value="2" th:selected="${user.role}==2">2</option>
-                                                    <option value="3" th:selected="${user.role}==3">3</option>
-                                                    <option value="4" th:selected="${user.role}==4">4</option>
-                                                    <option value="5" th:selected="${user.role}==5">5</option>
-                                                    <option value="0" th:selected="${user.role}==0">0</option>
+                                                    <option value="ADMIN" th:selected="${user.role}=='ADMIN'">ADMIN</option>
+                                                    <option value="2" th:selected="${user.role}=='USER'">USER</option>
+                                                    <option value="3" th:selected="${user.role}=='3'">3</option>
+                                                    <option value="4" th:selected="${user.role}=='4'">4</option>
+                                                    <option value="5" th:selected="${user.role}=='5'">5</option>
+                                                    <option value="0" th:selected="${user.role}=='0'">0</option>
                                                 </select>
                                             </td>
-                                            <td th:text="${user.createdAt}"></td>
-                                            <td><a href="#">[상세확인]</a></td>
+                                            <td th:text="${#strings.substring(user.createdAt, 2, 16)}"></td>
+                                            <td class="userDetail"><a href="#">[상세확인]</a></td>
                                         </tr>
                                     </tbody>
                                 </table>

@@ -66,6 +66,8 @@ header{
     margin-left: 4px;
 }
 
+.userDetail:hover{font-weight: bold; color: #f00;}
+
 
 /* main */
 

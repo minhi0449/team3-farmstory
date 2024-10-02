@@ -1,4 +1,4 @@
-package com.farmstory.dto;
+package com.farmstory.dto.user;
 
 
 import lombok.*;

@@ -1,3 +1,20 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const termsCheckbox = document.querySelector('#chk1');
+    const privacyCheckbox = document.querySelector('#chk2');
+    const nextButton = document.querySelector('.btnNext');
+
+    nextButton.addEventListener('click', function(event) {
+        event.preventDefault(); // 기본 동작을 항상 멈춥니다.
+
+        if (!termsCheckbox.checked || !privacyCheckbox.checked) {
+            alert("이용약관과 개인정보 수집 및 이용에 대한 안내에 모두 동의하여 주십시오.");
+        } else {
+            // 체크박스가 모두 체크되었을 때 다음 페이지로 이동
+            window.location.href = this.getAttribute('href');
+        }
+    });
+});
+
 // fetch GET용
 async function fetchGet(url){
 

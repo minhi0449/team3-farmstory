@@ -1,10 +1,9 @@
-package com.farmstory.dto;
+package com.farmstory.dto.user;
 
 import com.farmstory.entity.User;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.io.Serializable;
 
 @Getter
 @Setter

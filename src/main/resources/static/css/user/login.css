@@ -37,6 +37,7 @@
     height: 52px;
     background-color: #fdfdfd;
     border: 1px solid #bebebe;
+    cursor: pointer;
 }
 
 .login .snsLogin {width: 256px; margin: 0 auto;}

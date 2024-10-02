@@ -1,6 +1,6 @@
 package com.farmstory.controller;
 
-import com.farmstory.dto.UserDTO;
+import com.farmstory.dto.user.UserDTO;
 import com.farmstory.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -14,7 +14,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Controller
 public class AdminController {
-
 
     private final UserService userService;
 
@@ -38,6 +37,11 @@ public class AdminController {
         return "/admin/user/list";
 
     }
+
+
+
+
+
 
 
 }
