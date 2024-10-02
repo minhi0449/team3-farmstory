@@ -1,9 +1,15 @@
-.aside_bg .cate_lnb li a{
+.aside_bg .cate_lnb li:nth-of-type(1) a{
     position: absolute; left: 0; top:107px;
     text-indent: -9999px; display: block; width: 176px; height: 29px;
-    background: url('../images/sub_cate2_lnb1.png') no-repeat;
+    background: url('../images/sub_cate2_lnb1_ov.png') no-repeat;
 }
-.aside_bg .cate_lnb li a:hover{background: url('../images/sub_cate2_lnb1_ov.png') no-repeat; }
+.aside_bg .cate_lnb li:nth-of-type(2) a{
+    position: absolute; left: 0; top:135px;
+    text-indent: -9999px; display: block; width: 176px; height: 29px;
+    background: url('../images/myinfo_menu1.png') no-repeat;
+}
+/*.aside_bg .cate_lnb li:nth-of-type(1) a:hover{background: url('../images/sub_cate2_lnb1_ov.png') no-repeat; }*/
+.aside_bg .cate_lnb li:nth-of-type(2) a:hover{background: url('../images/myinfo_menu1_ov.png') no-repeat; }
 
 
 .tabs {

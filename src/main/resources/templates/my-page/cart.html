@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>장바구니</title>
+  <link rel="shortcut icon" th:href="@{/images/fav.ico}" type="image/x-icon">
+  <link rel="stylesheet" th:href="@{/css/reset.css}">
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/style_cart.css}">
+  <script>
+    //count max = 차후에 재고량 넣기
+    //input으로 count가 변경될때 소계 변경하기
+    //체크박스 선택된 상태에서 수량변경시 전체합계 변경하기
+    //최종주문시 count 수정
+    //주문하기 데이터베이스 전송 및 세션에 저장
+    window.onload = function(){
+
+      const counts = document.getElementsByClassName('count');
+      const discounts = document.getElementsByClassName('discount');
+      const prices = document.getElementsByClassName('price'); //할인된 가격
+      const points = document.getElementsByClassName('point'); //적립되는 포인트
+      const select_points = document.getElementsByClassName('select_point'); //적립 포인트률
+      const totals = document.getElementsByClassName('total'); //소계
+
+      const btnDelete = document.getElementById('btnDelete');
+
+      // input요소에 대해서 이벤트 리스너 추가 (수량을 입력하여 변경했을때 바로 반영되도록)
+      const inputCount = document.querySelectorAll('.count');
+
+      inputCount.forEach((input , index) => {
+        input.addEventListener('input', () => {
+
+          // 각 input의 수량이 변경될 때 계산을 다시 수행
+          const count = parseInt(input.value) || 0;
+          const price = parseInt(prices[index].textContent)||0;
+          const select_point = parseFloat(select_points[index].textContent) || 0;
+
+          //적립되는 포인트 계산
+          const total_point = Math.floor(price * (select_point / 100) * count);
+          points[index].textContent = total_point + 'p';
+
+          //소계
+          const total = (price * count);
+          totals[index].textContent = total.toLocaleString() + '원';
+          totals[index].style.fontWeight = 'bold';
+        })
+      })
+
+
+
+      // 적립 포인트 비율 숨기기(초기계산)
+      for(let i = 0; i<counts.length; i++) {
+        select_points[i].style.display = 'none';
+
+        const count = parseInt(counts[i].value) || 0; //갯수
+        const price = parseFloat(prices[i].textContent) || 0; //할인된 가격
+        const select_point = parseFloat(select_points[i].textContent) || 0; //적립되는 포인트률
+        const discount = parseFloat(discounts[i].textContent) || 0; // 나중에 쓸 것 같아서..
+
+
+        //적립되는 포인트 계산
+        const total_point = Math.floor(price * (select_point / 100) * count);
+        points[i].textContent = total_point + 'p';
+
+        //소계
+        const total = (price * count);
+        totals[i].textContent = total.toLocaleString() + '원';
+        totals[i].style.fontWeight = 'bold';
+
+      }
+
+
+
+      //제목줄 체크박스
+      const checkAll = document.querySelector('.checkbox');
+      //제목줄 제외 체크박스
+      //const checks = document.querySelectorAll('.checkboxes');
+
+      //1. 제목줄 체크박스 클릭시
+      checkAll.addEventListener('click', function(){
+        const isChecked = checkAll.checked; // 제목줄 체크, 체크여부 변수
+        const checkBoxes = document.querySelectorAll('.checkboxes'); //제목줄 제외 체크박스
+
+        // 전체선택
+        if(isChecked){
+          for(const checkBox of checkBoxes){
+            checkBox.checked = true;
+            updateTotal();
+          }
+          // 전체해제
+        }else {
+          for(const checkBox of checkBoxes){
+            checkBox.checked = false;
+            updateTotal();
+          }
+        }
+      })
+
+      //2. 선택항목 체크박스 클릭시 제목줄 체크박스 업데이트
+      const checkBoxes = document.querySelectorAll('.checkboxes');
+
+      checkBoxes.forEach(checkBox => {
+        checkBox.addEventListener('click' , function (){
+          const checkCount = document.querySelectorAll('.checkboxes:checked').length;
+          if(checkCount === checkBoxes.length){
+            checkAll.checked = true;
+          }else {
+            checkAll.checked = false;
+          }
+        })
+      })
+
+
+
+
+      // 선택한 체크박스 삭제
+      btnDelete.onclick = function(e){
+        e.preventDefault();
+
+        const checks = document.querySelectorAll('.checkboxes:checked');
+
+        if(checks.length === 0){
+          alert('삭제할 항목을 선택하세요.');
+          return;
+        }
+        const data = Array.from(checks).map(checkbox => checkbox.value);
+
+        fetch('/farmstory/market/cart/delete',{
+          method : 'DELETE',
+          headers : {'Content-Type' : 'application/json'},
+          body : JSON.stringify(data)
+        })
+                .then(resp =>
+                {
+                  if(resp.ok == false){
+                    throw new Error("실패")
+                  }
+                  alert('성공');
+                  checks.forEach(checkbox => {
+                    const tr = checkbox.closest('tr');
+                    if(tr){
+                      tr.remove();
+                    }
+                  })
+
+                  // // 삭제 후 빈 상태 메시지 표시
+                  // const restbox = document.querySelectorAll('table.tb1 tr').length - 1; // 남은 체크박스 수
+                  // if (restbox === 0) {
+                  //     document.getElementById('empty').style.display = 'table-row'; // 메시지 보여주기
+                  // }
+
+                })
+                .catch(err => {
+                  console.log(err);
+                  alert('오류발생');
+                })
+
+      } //체크박스 삭제 끝
+
+      // 합계 계산 (체크된 상품에 대해서 정보를 가져와서 계산)
+      function updateTotal() {
+        const checks = document.querySelectorAll('.checkboxes:checked');
+        let totalCount = 0; //상품수
+        let totalProduct = 0; //상품금액
+        let totalDiscount = 0; //할인금액
+        let totalDeliveryFee = 0; // 배송비
+        let totalPoint = 0; // 포인트
+        let resultPrice = 0;
+
+
+        checks.forEach(checkBox => {
+          const tr = checkBox.closest('tr');
+          if (tr) {
+
+            const count = parseInt(tr.querySelector('.count').value) || 0;
+            const discount = parseInt(tr.querySelector('.discount').textContent) || 0; //할인율
+            const price = parseInt(tr.querySelector('.price').textContent) || 0;
+            const orgPrice = parseInt(tr.querySelector('.org_price').textContent) || 0;
+            let delivery = parseInt(tr.querySelector('.deliveryFee').textContent) || 0;
+            const etc = parseInt(tr.querySelector('.etc').textContent) || 0;
+
+
+            if(count > stock) {
+              stockInput.value = stock;
+              quantity = stock;
+            }
+
+            totalCount += count;
+            totalProduct += orgPrice * count; //상품가격
+            totalDiscount += (discount * orgPrice / 100) * count; //할인받는 가격
+            totalPoint += Math.floor(price * (parseFloat(tr.querySelector('.select_point').textContent) / 100) * count); // 포인트 계산
+            let totalPrice = ((orgPrice * count) - ((discount * orgPrice / 100) * count)); // 소계
+
+
+
+            if(totalPrice >= etc){
+              delivery = 0;
+            } {
+              totalDeliveryFee += delivery;
+            }
+            resultPrice += totalPrice + delivery;
+          }
+        })
+        // dom 업뎃
+        document.querySelector('.product_delivery_fee').textContent = totalDeliveryFee.toLocaleString()+'원';
+        document.querySelector('.product_count').textContent = totalCount;
+        document.querySelector('.product_price').textContent = totalProduct.toLocaleString()+'원';
+        document.querySelector('.product_discount').textContent = totalDiscount.toLocaleString()+'원';
+        document.querySelector('.product_point').textContent = totalPoint.toLocaleString()+'원';
+        document.querySelector('.product_total').textContent = resultPrice.toLocaleString()+'원';
+
+      }
+
+      //체크박스 클릭시 합계 업데이트
+      const checkBoxUpdate = document.querySelectorAll('.checkboxes');
+      checkBoxUpdate.forEach(checkBox => {
+        checkBox.addEventListener('click' , updateTotal);
+      });
+
+
+      //수량 변경시 합계 업데이트
+      const countUpdate = document.querySelectorAll('.count');
+      countUpdate.forEach(input => {
+        input.addEventListener('input', updateTotal);
+      })
+
+      // 데이터 전송
+      const btnOrder = document.querySelector('.btn_order');
+
+      btnOrder.addEventListener('click' , function(e){
+        e.preventDefault();
+
+        const selectItems = Array.from(document.querySelectorAll('.checkboxes:checked')).map(checkBox => {
+          return checkBox.value; // 체크된 체크박스의 값들을 배열로 가져옴
+        })
+
+        const counts = Array.from(document.querySelectorAll('.checkboxes:checked')).map(checkBox => {
+          const row = checkBox.closest('tr'); // 체크된 체크박스의 행을 찾음
+          return row.querySelector('.count').value; // 해당 행의 수량 입력값 가져옴
+        });
+
+        if(selectItems.length === 0){
+          alert('주문할 상품을 선택해주세요.');
+          return;
+        }
+
+        //선택된 항목들을 form 데이터에 추가 (선택된 항목들을 cartNo이름으로 data에 append함)
+        const data = new FormData();
+        selectItems.forEach((item,index) => {
+          data.append('cartNo',item);
+          data.append('count', counts[index]);
+        });
+
+        fetch('/farmstory/market/order', {
+          method : 'POST',
+          body : data
+        })
+                .then(resp => {
+                  if(!resp.ok){
+                    throw new Error('전송실패');
+                  }
+                  alert('주문 페이지로 이동');
+                  window.location.href="/farmstory/market/order"
+                })
+                .catch(err => {
+                  console.log(err);
+                  alert('오류발생')
+                });
+      })
+
+
+    } //onload 끝
+
+  </script>
+</head>
+<body>
+
+<th:block th:include ="/include/header.html"/>
+
+<!-- #main -->
+<main id="main" class="cf">
+  <section class="mainIn cf">
+    <div class="sub_bg">
+      <img src="../images/sub_top_tit2.png" alt="MARKET" class="sub_tit">
+    </div><!-- .sub_bg -->
+
+    <aside class="aside">
+      <div class="sidebar">
+        <div class="aside_cate">
+          <img src="../images/sub_aside_cate2_tit.png" alt="Buying in the Market 장보기">
+        </div><!-- .aside_cate -->
+        <div class="aside_bg">
+          <ul class="cate_lnb">
+            <li> <a th:href="@{/market/list}">장보기</a></li>
+            <li> <a href="#" id="logincart">장바구니</a></li>
+          </ul><!-- .cate_lnb -->
+        </div><!-- .aside_bg -->
+      </div><!-- .sidebar -->
+    </aside><!-- .aside -->
+    <article class="article">
+      <div class="articleIn cf">
+        <nav>
+          <h2><img src="../images/sub_nav_tit_cate2_tit1.png" alt="장보기"></h2>
+          <p class="location">
+            <img src="../images/sub_page_nav_ico.gif" alt="메뉴">
+            <span>HOME </span>
+            <span>장보기 </span>
+            <strong>장보기</strong>
+          </p><!-- .location -->
+        </nav>
+
+        <h3 class="tb_tit" th:text ="'장바구니 전체('+${count}+')'">장바구니 전체(10)</h3><!-- .tb_tit -->
+        <table class="tb1">
+          <colgroup>
+            <col style="width: 11%">
+            <col style="width: 5%">
+            <col style="width: 10%">
+            <col style="width: 15%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+          </colgroup>
+          <tr>
+            <th><input type="checkbox" class="checkbox"/></th>
+            <th>이미지</th>
+            <th>종류</th>
+            <th>상품명</th>
+            <th>수량</th>
+            <th>할인</th>
+            <th>포인트</th>
+            <th>가격</th>
+            <th>소계</th>
+          </tr>
+          <tr th:if="${cart == null or #lists.isEmpty(cart)}">
+            <td colspan="9" id="empty" class="td_first" >장바구니에 상품이 없습니다.</td>
+          </tr>
+          <tr th:each="carts:${cart}" th:if="${cart != null and !#lists.isEmpty(cart)}">
+            <td><input type="checkbox" class="checkboxes" th:attr="value=${carts.cartNO}"/></td>
+            <td><img th:src="@{'/productImg/'+${carts.product.img1}}" alt="사과샘플" /></td>
+            <td th:text="${carts.product.type}"></td>
+            <td class="prodName" th:text="${carts.product.prodName}">사과 500g</td>
+            <td>
+              <input type="number" class="count" th:value="${carts.count}" min="1" th:max="${carts.product.stock}" step="1">
+            </td>
+            <td class="deliveryFee" th:text="${carts.product.deliveryfee}">배송비</td>
+            <td class="etc" th:text="${carts.product.etc}">이상무료배송</td>
+            <td class="discount" th:text="${carts.product.discount} + '%'"></td>
+            <td class="point"></td>
+            <td class="select_point" th:text="${carts.product.point}"></td>
+            <td>
+              <span class="org_price" th:text="${carts.product.price}"></span><br>
+              <span class="price">[[${carts.product.price - carts.product.price * carts.product.discount / 100}]]</span>원
+            </td>
+            <td class="total"></td>
+          </tr>
+        </table><!-- .tb1 -->
+
+        <button class="btnSD" id="btnDelete"><a th:href="@{/market/delete}">선택삭제</a></button>
+        <div class="order_final">
+          <table class="tb2">
+            <tr>
+              <th colspan="2">전체합계</th>
+            </tr>
+            <tr>
+              <td>상품수</td>
+              <td class="product_count">0원</td>
+            </tr>
+            <tr>
+              <td>상품금액</td>
+              <td class="product_price">0원</td>
+            </tr>
+            <tr>
+              <td>할인금액</td>
+              <td class="product_discount">0원</td>
+            </tr>
+            <tr>
+              <td>배송비</td>
+              <td class="product_delivery_fee">0원</td>
+            </tr>
+            <tr>
+              <td>포인트</td>
+              <td class="product_point">0원</td>
+            </tr>
+            <tr>
+              <td>전체주문금액</td>
+              <td class="product_total">0원</td>
+            </tr>
+          </table><!-- .tb2 -->
+          <button class="btn_order"><a th:href="@{/market/order}">주문하기</a></button>
+        </div><!-- .order_final -->
+
+      </div><!-- .articleIn -->
+    </article><!-- .article -->
+  </section>
+</main><!-- #main -->
+
+<th:block th:include ="/include/footer.html"/>
+</body>
+</html>
