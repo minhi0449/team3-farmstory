@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface UserRepositoryCustom {
     public Page<User> selectUserAllForList(PageRequestDTO requestDTO, Pageable pageable);
+
+    User selectUserById(String uid);
 }
 
 

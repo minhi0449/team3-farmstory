@@ -6,57 +6,78 @@
     <link rel="stylesheet" th:href="@{/css/reset.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/common.css}">
-    <link rel="stylesheet" th:href="@{/css/user/findId.css}">
+    <link rel="stylesheet" th:href="@{/css/user/findIdResult.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>아이디 찾기</title>
+    <title>아이디 찾기 결과</title>
 </head>
 <body>
 <div id="wrapper">
     <th:block th:include ="/include/header.html"/>
     <main>
         <div class="container">
-            <form th:action="@{/user/findIdResult}" method="gets" name="findIdResult">
+            <form>
                 <section>
-                    <div class="headtxt">
-                        <span>아이디 찾기</span>
+
+                    <div class="top_txt">
+                        <span>아이디 찾기 결과</span>
                     </div>
 
-                    <table>
-                        <tr>
-                            <td class="name" name="name">이름</td>
-                            <td>
-                                <input type="text" id="name" name="name" placeholder="이름 입력" required>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><label class="email" name="email">이메일</label></td>
-                            <td>
-                                <div class="form_group">
-                                    <input type="email" class="emailtext" id="email" placeholder="이메일 입력">
-                                    <button type="button" class="getCodeBtn" id="sendCodeBtn">인증번호 받기</button>
-                                </div>
-                                <div class="form_group cf">
-                                    <input class="verificationCodetext cf" id="verificationCode" type="text" placeholder="인증번호 입력">
-                                    <button type="button" class="verificationCode cf" id="verifyCodeBtn">확인</button>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
+                    <!-- 사용자 정보가 있을 때 -->
+                    <div th:if="${user != null}">
+                        <table>
+                            <tr>
+                                <td>이름</td>
+                                <td>
+                                    <p><span th:text="${user.name}"></span></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>아이디</td>
+                                <td>
+                                    <p><span th:text="${user.uid}"></span></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>이메일</td>
+                                <td>
+                                    <p><span th:text="${user.email}"></span></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>가입일</td>
+                                <td>
+                                    <p><span th:text="${user.regdate}"></span></p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 사용자 정보가 없을 때 -->
+                    <div th:if="${user == null}">
+                        <div class="note" id="note">
+                            고객님의 정보와 일치하는 아이디가 없습니다.
+                        </div>
+                    </div>
                 </section>
-                <div class="note">
-                    <p>
-                        회원가입시 이메일 주소와 입력한 이메일 주소가 같아야, 인증번호를 받을 수 있습니다.<br>
-                        인증번호를 입력 후 확인 버튼을 누르세요.
-                    </p>
-                </div>
-                <div class="btns bottom">
-                    <button type="button" class="cancelBtn" id="cancelBtn">취소</button>
-                    <button type="submit" class="nextBtn" id="nextBtn" disabled>다음</button> <!-- 기본적으로 비활성화 -->
+
+                <!-- 버튼들 -->
+                <div class="btns">
+                    <!-- 사용자 정보가 없을 때 -->
+                    <div th:if="${user == null}" class="note">
+                        <a th:href="@{/user/findId}" class="btn1">아이디찾기</a>
+                        <a th:href="@{/user/terms}" class="btn2">회원가입</a>
+                    </div>
+
+                    <!-- 사용자 정보가 있을 때 -->
+                    <div th:if="${user != null}">
+                        <a th:href="@{/user/login}" class="btn3 btn_login">로그인</a>
+                        <a th:href="@{/user/findPass}" class="btn4 btn_pw">비밀번호찾기</a>
+                    </div>
                 </div>
             </form>
-        </div><!--mainIn-->
-    </main><!--main end-->
+        </div>
+    </main>
     <th:block th:insert ="~{/include/footer.html}"/>
 </div><!--wrapper end-->
 
@@ -81,7 +102,7 @@
         console.log('email:'+email)
 
         if (name && email) {
-            fetch(ctxPath + '/user/findId', {  // 정적 경로가 아닌 API 경로로 수정
+            fetch(ctxPath +'/user/findId', {  // 정적 경로가 아닌 API 경로로 수정
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -115,7 +136,7 @@
         console.log('email:'+ email)
 
         if (code) {
-            fetch(ctxPath +'/user/findIdResult', {  // 정적 경로가 아닌 API 경로로 수정
+            fetch(ctxPath +'/user/findIdresult', {  // 정적 경로가 아닌 API 경로로 수정
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

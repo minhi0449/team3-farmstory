@@ -12,12 +12,14 @@ import jakarta.mail.Message;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -142,8 +144,29 @@ public class UserService {
         return count;
     }
 
-    public void updateUser(){
+    public ResponseEntity updateUser(UserDTO userDTO) {
+        if(userDTO.getUid() != null) {
+            User entity = modelMapper.map(userDTO, User.class);
+            userRepository.save(entity);
 
+            return ResponseEntity.ok().body(true);
+        }
+        return ResponseEntity.ok().body(false);
+    }
+
+    public ResponseEntity updateUserPass(UserDTO userDTO) {
+
+        if(userDTO.getName() != null && userDTO.getPass() != null) {
+            String encoded = passwordEncoder.encode(userDTO.getPass());
+            userDTO.setPass(encoded);
+
+            User entity = modelMapper.map(userDTO, User.class);
+            userRepository.save(entity);
+
+            return ResponseEntity.ok().body(true);
+        }else{
+            return ResponseEntity.ok().body(false);
+        }
     }
 
     public void deleteUser(){
@@ -184,6 +207,48 @@ public class UserService {
         }
     }
 
+    //선택한 유저 정보 삭제
+    public void deleteUserById(String uid) {
+        //Entity 삭제 (데이터베이스 Delete)
+        userRepository.deleteById(uid);
+    }
+
+
+    @Transactional
+    public UserDTO leaveUser(String uid) {
+
+        Optional<User> opt = userRepository.findByUid(uid);
+        if(opt.isPresent()) {
+            User user = opt.get();
+            LocalDateTime createAt = LocalDateTime.parse(user.getCreateAt());
+            LocalDateTime deleteAt = LocalDateTime.now();
+
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUid(uid);
+            userDTO.setCreatedAt(String.valueOf(createAt));
+            userDTO.setDeletedAt(String.valueOf(deleteAt));
+
+            User entity = modelMapper.map(userDTO, User.class);
+            User savedUser = userRepository.save(entity);
+            return modelMapper.map(savedUser, UserDTO.class);
+        }
+        return null;
+    }
+
+    //유저 등급 수정
+    public boolean updateUserGrade(String userUid, String newGrade) {
+        // 유저 ID로 유저 찾기
+        Optional<User> optionalUser = userRepository.findById(userUid);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setRole(newGrade);  // 유저 등급 업데이트
+            userRepository.save(user);  // 데이터베이스에 저장
+            return true;  // 성공 시 true 반환
+        } else {
+            return false;  // 유저가 없을 경우 false 반환
+        }
+    }
 
     /**
      * 로그인 로직
@@ -193,9 +258,10 @@ public class UserService {
      */
     public UserDTO login(String uid, String pass) {
         // uid로 사용자 조회
-        User user = userRepository.findByUid(uid);
-
-        if (user != null) {
+        Optional<User> optionalUser = userRepository.findByUid(uid);
+        // 사용자 존재 여부 확인
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
             // 비밀번호 검증
             if (passwordEncoder.matches(pass, user.getPass())) {
                 log.info("로그인 성공 - uid: " + uid);
@@ -209,18 +275,17 @@ public class UserService {
         return null; // 로그인 실패 시 null 반환
     }
 
+
     // 아이디 찾기 서비스 추가
     public void receiveCode(String name, String email) {
-
         // 1. 이름과 이메일로 DB에서 유저 검색
         Optional<User> user = userRepository.findByNameAndEmail(name, email);
 
         if (user.isEmpty()) {
             throw new RuntimeException("해당 이름과 이메일로 계정을 찾을 수 없습니다.");
         }
-
         // 2. 이메일 서비스에서 코드 생성 및 이메일 전송 (세션에 코드 저장)
-        String verificationCode = emailService.sendMail(email, "contents/user/email", session);
+        String verificationCode = emailService.sendMail(email, "/user/email", session);
 
         // 3. 인증번호를 세션에 저장
         session.setAttribute("code", verificationCode);  // 세션에 인증번호 저장
@@ -282,14 +347,11 @@ public class UserService {
 
         // 1. 이름과 이메일로 DB에서 유저 검색
         Optional<User> user = userRepository.findByUidAndEmail(uid, email);
-
         if (user.isEmpty()) {
             throw new RuntimeException("해당 이름과 이메일로 계정을 찾을 수 없습니다.");
         }
-
         // 2. 이메일 서비스에서 코드 생성 및 이메일 전송 (세션에 코드 저장)
         String verificationCode = emailService.sendMail(email, "contents/user/email", session);
-
         // 3. 인증번호를 세션에 저장
         session.setAttribute("code", verificationCode);  // 세션에 인증번호 저장
         session.setAttribute("uid", uid);  // 세션에 사용자 아이디 저장
@@ -314,5 +376,11 @@ public class UserService {
         // 5. 비밀번호 변경 완료 후, 유저 정보 반환 (필요한 경우)
         return user;
     }
+
+    public UserDTO selectUserById(String uid) {
+        return null;
+    }
+
+
 
 }

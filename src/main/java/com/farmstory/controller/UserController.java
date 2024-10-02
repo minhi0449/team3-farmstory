@@ -164,6 +164,8 @@ public class UserController {
         String name = jsonData.get("name");
         String email = jsonData.get("email");
 
+        log.info("name : " + name + ", email : " + email);
+
         // 아이디 찾기 서비스 호출
         userService.receiveCode(name, email);
         log.info("저장한 세션 : {}", session.getAttribute("code"));
@@ -173,7 +175,7 @@ public class UserController {
 
     // 이메일 인증 코드 검증 후 아이디 반환
     @ResponseBody
-    @PostMapping("/user/findidresult")
+    @PostMapping("/user/findIdResult")
     public ResponseEntity<?> verifyEmailCode(HttpSession session, @RequestBody Map<String, String> jsonData) {
         String verificationCode = jsonData.get("code");
         String name = jsonData.get("name");
@@ -204,7 +206,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/user/findPass")
+    @GetMapping("/user/findUserByUidAndEmail")
     public String findUserByUidAndEmail() {
         return "/user/findPass";  // templates 폴더 안의 findId.html을 렌더링함
     }
@@ -245,7 +247,6 @@ public class UserController {
         ) {
             // 성공 응답
             return ResponseEntity.status(HttpStatus.OK).build();
-
         } else {
             // 실패 응답
             return ResponseEntity.badRequest().build();
@@ -288,8 +289,42 @@ public class UserController {
         }
     }
 
+    // 아이디 찾기 결과
+    @GetMapping("/user/findIdResult")
+    public String UserFindIdResult(){
+        return "user/findIdResult";
+    }
 
+    // 비밀번호 찾기 
+    @GetMapping("/user/findPass")
+    public String UserFindPass(){
+        return "user/findPass";
+    }
 
+    // 비밀번호 찾기 결과 start -----------
+    @GetMapping("/user/findPassResult")
+    public String UserFindPassResult(HttpSession session, Model model) {
+        session.setMaxInactiveInterval(60);
+        String uid = (String) session.getAttribute("uid");
+        if(uid == null) {
+            return "redirect:/user/findPass";
+        }
+        model.addAttribute("uid", uid);
+        return "user/findPassResult";
+    }
 
+    @PostMapping("/user/findPassResult")
+    public String UserFindPassResult(UserDTO userDTO){
+
+        String uid = userDTO.getUid();
+
+        UserDTO resultUser = userService.selectUserById(uid);
+
+        resultUser.setPass(userDTO.getPass());
+        userService.updateUserPass(resultUser);
+
+        return "redirect:/user/login";
+    }
+    // 비밀번호 찾기 결과 end -----------
 
 }
