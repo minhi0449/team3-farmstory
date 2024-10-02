@@ -1,4 +1,4 @@
-package com.farmstory.Controller;
+package com.farmstory.controller;
 
 
 import com.farmstory.dto.ProductDTO;

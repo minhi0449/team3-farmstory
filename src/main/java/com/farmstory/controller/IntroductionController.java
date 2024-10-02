@@ -1,4 +1,4 @@
-package com.farmstory.Controller;
+package com.farmstory.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

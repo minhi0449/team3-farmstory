@@ -22,7 +22,7 @@
                 <li><a th:href="@{/user/login}" id="login">로그인</a></li>
                 <li><a th:href="@{/user/terms}" id="register">회원가입</a></li>
                 <li><a th:href="@{/admin/product/list}" id="adminList">관리자상품목록</a></li>
-                <li><a th:href="@{/article/list}" id="cs">고객센터</a></li>
+                <li><a th:href="@{/article/list/community/8}" id="cs">고객센터</a></li>
             </th:block>
             <!-- 로그아웃 -->
             <th:block th:if="${!#authentication.principal.equals('anonymousUser')}">
@@ -49,7 +49,7 @@
                 </a></li>
                 <li><a th:href="@{/article/list/crop/1}"><img th:src="@{/images/head_menu3.png}" alt="농작물이야기"></a></li>
                 <li><a th:href="@{/event/event}"><img th:src="@{/images/head_menu4.png}" alt="이벤트"></a></li>
-                <li><a th:href="@{/article/list/community/1}"><img th:src="@{/images/head_menu5.png}" alt="커뮤니티"></a></li>
+                <li><a th:href="@{/article/list/community/4}"><img th:src="@{/images/head_menu5.png}" alt="커뮤니티"></a></li>
             </ul><!-- .gnb -->
         </nav><!-- .gnb_wrap -->
     </div><!-- .headerIn -->

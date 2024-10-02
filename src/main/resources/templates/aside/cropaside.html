@@ -7,12 +7,15 @@
       <div class="sidebar">
         <div class="aside_cate">
           <img th:src="@{/images/sub_aside_cate3_tit.png}" alt="Croptalk 농작물이야기">
+          <span id="group" th:value="${group}">[[${group}]]</span>
+          <span id="cate" th:value="${cate}">[[${cate}]]</span>
         </div><!-- .aside_cate -->
         <div class="aside_bg">
+
           <ul class="cate_lnb1">
-            <li> <a th:href="@{/article/list/crop/1}" class="lnb1" >농작물이야기</a></li>
-            <li> <a th:href="@{/article/list/crop/2}" class="lnb2" >텃밭가꾸기</a></li>
-            <li> <a th:href="@{/article/list/crop/3}" class="lnb3" >귀농학교</a></li>
+            <li> <a th:href="@{/article/list/crop/1}" id="lnb1" class="lnb1" >농작물이야기</a></li>
+            <li> <a th:href="@{/article/list/crop/2}" id="lnb2" class="lnb2" >텃밭가꾸기</a></li>
+            <li> <a th:href="@{/article/list/crop/3}" id="lnb3" class="lnb3" >귀농학교</a></li>
           </ul><!-- .cate_lnb -->
         </div><!-- .aside_bg -->
       </div><!-- .sidebar -->
@@ -27,6 +30,29 @@
             <img th:src="@{/images/sub_page_nav_ico.gif}" alt="메뉴">
             <span>HOME </span>
             <span>농작물이야기 </span>
-            <strong>농작물이야기</strong>
+            <strong id="strong"></strong>
           </p>
         </nav>
+
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const cate = document.getElementById('cate').innerText;
+            const lnb1 = document.getElementById('lnb1');
+            const lnb2 = document.getElementById('lnb2');
+            const lnb3 = document.getElementById('lnb3');
+            const strong = document.getElementById('strong');
+            console.log(cate);
+              // 선택된 값에 따라 해당 lnb의 배경 이미지를 변경
+              if (cate == 1) {
+                lnb1.style.background = "url('/farmstory/images/sub_cate3_lnb1_ov.png') no-repeat";
+                strong.textContent = '농작물이야기';
+              } else if (cate == 2) {
+                lnb2.style.background = "url('/farmstory/images/sub_cate3_lnb2_ov.png') no-repeat";
+                strong.textContent = '텃밭가꾸기';
+              } else if (cate == 3) {
+                lnb3.style.background = "url('/farmstory/images/sub_cate3_lnb3_ov.png') no-repeat";
+                strong.textContent = '귀농학교';
+              }
+            });
+
+        </script>

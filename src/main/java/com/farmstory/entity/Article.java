@@ -21,7 +21,9 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ano;
 
+    private String group;
     private String cate;
+
     private String title;
     private String content;
     private int comment;
