@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +9,7 @@
     <link rel="shortcut icon" href="../images/fav.ico" type="image/x-icon">
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/header.css">
-    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/my-page_common.css">
     <link rel="stylesheet" href="../css/footer.css">
     <link rel="stylesheet" href="../css/my-page_order.css">
     <style>
@@ -24,16 +26,18 @@
 <main id="main" class="cf">
     <section class="mainIn cf">
         <div class="sub_bg">
-            <img src="../images/sub_top_tit2.png" alt="MARKET" class="sub_tit">
+            <img src="../images/myinfo_top_tit.png" alt="MARKET" class="sub_tit">
         </div><!-- .sub_bg -->
         <aside class="aside">
             <div class="sidebar">
                 <div class="aside_cate">
-                    <img src="../images/sub_aside_cate2_tit.png" alt="Buying in the Market 장보기">
+                    <img src="../images/myinfo_menu_tit.png" alt="나의정보">
                 </div><!-- .aside_cate -->
                 <div class="aside_bg">
                     <ul class="cate_lnb">
-                        <li><a href="#">주문내역</a></li>
+                        <li> <a th:href="@{/my-page/cart}">장보기</a></li>
+                        <li> <a href="#">주문내역</a></li>
+                        <li> <a href="#">정보수정</a></li>
                     </ul><!-- .cate_lnb -->
                 </div><!-- .aside_bg -->
             </div><!-- .sidebar -->
@@ -41,12 +45,12 @@
         <article class="article">
             <div class="articleIn cf">
                 <nav>
-                    <h2><img src="../images/sub_nav_tit_cate2_tit1.png" alt="주문내역"></h2>
+                    <h2><img src="../images/myinfo_nav_tit2.png" alt="주문내역"></h2>
                     <p class="location">
                         <img src="../images/sub_page_nav_ico.gif" alt="메뉴">
                         <span>HOME </span>
                         <span>나의정보 </span>
-                        <strong>주문하기</strong>
+                        <strong>주문내역</strong>
                     </p><!-- .location -->
                 </nav>
 
@@ -64,6 +68,9 @@
                         <col style="width: 10%">
                     </colgroup>
                     <tr>
+                        <th:block sec:authorize="isAuthenticated()">
+                            <input type="hidden" th:value="${#authentication.principal.user.uid}" name="uid">
+                        </th:block>
                         <th>주문번호</th>
                         <th>이미지</th>
                         <th>상품명</th>
@@ -200,6 +207,20 @@
 
     // 모달 배경 클릭 시 모달 닫기
     document.getElementById('modalBackground').addEventListener('click', closeModal);
+</script>
+<script>
+    document.getElementById('logincart').addEventListener('click',function (e){
+        e.preventDefault();
+        const uidElement = document.getElementsByName('uid')[0]; // uid 요소를 가져옵니다.
+        const uid = uidElement ? uidElement.value : null; // uid가 존재하는지 확인
+        if(!uid){
+            alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+            window.location.href = `/farmstory/user/login`;
+        }else{
+            window.location.href = `/farmstory/my-page/cart?uid=`+uid;
+        }
+
+    })
 </script>
 </body>
 </html>

@@ -6,8 +6,8 @@
   <title>장바구니</title>
   <link rel="shortcut icon" th:href="@{/images/fav.ico}" type="image/x-icon">
   <link rel="stylesheet" th:href="@{/css/reset.css}">
-  <link rel="stylesheet" th:href="@{/css/common.css}">
-  <link rel="stylesheet" th:href="@{/css/style_cart.css}">
+  <link rel="stylesheet" th:href="@{/css/my-page_common.css}">
+  <link rel="stylesheet" th:href="@{/css/my-page_cart.css}">
   <script>
     //count max = 차후에 재고량 넣기
     //input으로 count가 변경될때 소계 변경하기
@@ -180,12 +180,6 @@
             let delivery = parseInt(tr.querySelector('.deliveryFee').textContent) || 0;
             const etc = parseInt(tr.querySelector('.etc').textContent) || 0;
 
-
-            if(count > stock) {
-              stockInput.value = stock;
-              quantity = stock;
-            }
-
             totalCount += count;
             totalProduct += orgPrice * count; //상품가격
             totalDiscount += (discount * orgPrice / 100) * count; //할인받는 가격
@@ -282,18 +276,19 @@
 <main id="main" class="cf">
   <section class="mainIn cf">
     <div class="sub_bg">
-      <img src="../images/sub_top_tit2.png" alt="MARKET" class="sub_tit">
+      <img src="../images/myinfo_top_tit.png" alt="MARKET" class="sub_tit">
     </div><!-- .sub_bg -->
 
     <aside class="aside">
       <div class="sidebar">
         <div class="aside_cate">
-          <img src="../images/sub_aside_cate2_tit.png" alt="Buying in the Market 장보기">
+          <img src="../images/myinfo_menu_tit.png" alt="나의정보">
         </div><!-- .aside_cate -->
         <div class="aside_bg">
           <ul class="cate_lnb">
-            <li> <a th:href="@{/market/list}">장보기</a></li>
-            <li> <a href="#" id="logincart">장바구니</a></li>
+            <li> <a href="#">장바구니</a></li>
+            <li> <a th:href="@{/my-page/order}">주문내역</a></li>
+            <li> <a href="#">정보수정</a></li>
           </ul><!-- .cate_lnb -->
         </div><!-- .aside_bg -->
       </div><!-- .sidebar -->
@@ -301,16 +296,16 @@
     <article class="article">
       <div class="articleIn cf">
         <nav>
-          <h2><img src="../images/sub_nav_tit_cate2_tit1.png" alt="장보기"></h2>
+          <h2><img src="../images/myinfo_nav_tit1.png" alt="장바구니"></h2>
           <p class="location">
             <img src="../images/sub_page_nav_ico.gif" alt="메뉴">
             <span>HOME </span>
-            <span>장보기 </span>
-            <strong>장보기</strong>
+            <span>나의정보 </span>
+            <strong>장바구니</strong>
           </p><!-- .location -->
         </nav>
 
-        <h3 class="tb_tit" th:text ="'장바구니 전체('+${count}+')'">장바구니 전체(10)</h3><!-- .tb_tit -->
+        <h3 class="tb_tit" th:text ="|장바구니 전체(${cart.size()})|">장바구니 전체(10)</h3><!-- .tb_tit -->
         <table class="tb1">
           <colgroup>
             <col style="width: 11%">
@@ -343,7 +338,7 @@
             <td th:text="${carts.product.type}"></td>
             <td class="prodName" th:text="${carts.product.prodName}">사과 500g</td>
             <td>
-              <input type="number" class="count" th:value="${carts.count}" min="1" th:max="${carts.product.stock}" step="1">
+              <input type="number" class="count" th:value="${carts.count}" min="1" max="100" step="1">
             </td>
             <td class="deliveryFee" th:text="${carts.product.deliveryfee}">배송비</td>
             <td class="etc" th:text="${carts.product.etc}">이상무료배송</td>
