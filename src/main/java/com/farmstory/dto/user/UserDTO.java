@@ -42,10 +42,9 @@ public class UserDTO {
         // 소수점(.) 기준으로 밀리초 부분을 제거
         String trimmedDateTime = createdAt.substring(0, createdAt.indexOf("."));
 
-        // 결과 출력s
+        // 결과 출력
         System.out.println(trimmedDateTime);  // 출력 예: 2024-10-01 16:52:38
     }
-
 
     public User toEntity() {
         return User.builder()

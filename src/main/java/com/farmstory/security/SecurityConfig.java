@@ -22,7 +22,6 @@ public class SecurityConfig {
 
     private final MyOauth2UserService myOauth2UserService;
 
-
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
         return new InMemoryClientRegistrationRepository(googleClientRegistration());
@@ -40,6 +39,21 @@ public class SecurityConfig {
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
                 .clientName("Google")
+                .build();
+    }
+
+    private ClientRegistration naverClientRegistration() {
+        return ClientRegistration.withRegistrationId("naver")
+                .clientId("x6Go0vQ85nI18r7OlwAj")
+                .clientSecret("e7E1wsFO9k")
+                .scope("profile", "email")
+                .authorizationUri("https://nid.naver.com/oauth2.0/authorize")
+                .tokenUri("https://uid.naver.com/oauth2.2/token")
+                .userInfoUri("https://openapi.naver.com/v1/nid/me")
+                .userNameAttributeName("sub")
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
+                .clientName("Naver")
                 .build();
     }
 
@@ -65,7 +79,6 @@ public class SecurityConfig {
         http.oauth2Login(login -> login.loginPage("/user/login")
                 .userInfoEndpoint(endpoint -> endpoint.userService(myOauth2UserService)));
         // oauth2 등록을 위한 서비스라고 보면 됨
-
 
         // 인가 설정
 //        http.authorizeHttpRequests(authorize -> authorize
@@ -98,7 +111,6 @@ public class SecurityConfig {
 //                .requestMatchers("/", "/index", "/**").permitAll()  // 인증 없이 접근 허용할 경로
 //                .anyRequest().permitAll() // 그 외의 요청은 인증 필요
 //        )
-
 
     }
 

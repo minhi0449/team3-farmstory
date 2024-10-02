@@ -76,4 +76,7 @@ public class User {
 
     public void setPass(String encodedPassword) {
     }
+
+    public void setRole(String newGrade) {
+    }
 }
