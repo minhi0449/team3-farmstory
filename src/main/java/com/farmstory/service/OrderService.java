@@ -77,7 +77,7 @@ public class OrderService {
 
     @Transactional
     public int createOrder(OrderCreateDTO orderDTO) {
-
+        System.out.println("orderDTO = " + orderDTO);
          User user = userRepository.findById(orderDTO.getUid())
                  .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
 
@@ -115,9 +115,6 @@ public class OrderService {
             if (itemSubtotal >= 30000) {
                 orderItem.changeDeliveryfee(0); // 배송비를 0으로 설정
             }
-
-            // 주문 아이템 업데이트
-            orderItemRepository.save(orderItem);
         });
 
 
