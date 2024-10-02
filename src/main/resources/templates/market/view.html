@@ -124,11 +124,11 @@
             const buyNow = document.getElementById('buyNow');
             buyNow.addEventListener('click', async function (e) {
                 e.preventDefault();
-
                 const prodNo = document.getElementById('prodNo').textContent.trim();
                 const quantity = parseInt(document.getElementById('quantity').value);
 
                 const user = document.getElementsByName('uid')[0].value;
+
                 if (!user) {
                     alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
                     window.location.href = `/farmstory/user/login`;
@@ -138,15 +138,17 @@
                     "count": quantity,
                     "uid": user
                 }
-                const sessiondata = await fetchPost('/farmstory/market/cart', JsonData)
-                if(sessiondata.success){
+                const sessiondata = await fetchPost('/farmstory/market/buy', JsonData)
 
+                console.log(sessiondata)
+                if(sessiondata !== null){
+                    alert('구매페이지로 이동합니다.');
+                    window.location.href = `/farmstory/market/order?type=right`;
+
+                }else{
+                    alert('실패');
                 }
-
-
-            })
-
-
+            }) //바로구매 끝
 
         }
     </script>

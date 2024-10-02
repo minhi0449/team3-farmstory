@@ -1,6 +1,7 @@
 package com.farmstory.controller;
 
 
+import com.farmstory.dto.BuyDTO;
 import com.farmstory.dto.CartRequestDTO;
 import com.farmstory.dto.CartResponseDTO;
 import com.farmstory.entity.User;
@@ -56,7 +57,7 @@ public class CartController {
                 .body(dto);
     }
 
-    @GetMapping("/market/order")
+    @GetMapping("/market/order") //바로 구매 type = right 입니다.
     public String order(@AuthenticationPrincipal MyUserDetails userDetails, Model model, HttpSession session) {
         if (userDetails == null) {
             return "redirect:/user/login";
@@ -93,6 +94,19 @@ public class CartController {
             cartService.deleteCart(data);
             return ResponseEntity.ok().build();
         }
+    }
+
+    @PostMapping("/market/buy")
+    public ResponseEntity<?> buy(@RequestBody BuyDTO buyDTO, HttpSession session) {
+
+        int productId = buyDTO.getProduct_id();
+        int count = buyDTO.getCount();
+        String uid = buyDTO.getUid();
+
+        session.setAttribute("rightBuy", buyDTO);
+
+        return ResponseEntity.ok().body(buyDTO);
+
     }
 
 }
