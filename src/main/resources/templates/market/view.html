@@ -100,8 +100,8 @@
                     "product_id": prodNo,
                     "count": quantity,
                     "uid" : user
-
                 }
+
                 const data = await fetchPost('/farmstory/market/cart', JsonData)
                 console.log("-------")
                 console.log(data);
@@ -118,7 +118,35 @@
 
                     }
                 }
-            }
+            }//장바구니 끝
+
+            // 바로 구매 기능
+            const buyNow = document.getElementById('buyNow');
+            buyNow.addEventListener('click', async function (e) {
+                e.preventDefault();
+
+                const prodNo = document.getElementById('prodNo').textContent.trim();
+                const quantity = parseInt(document.getElementById('quantity').value);
+
+                const user = document.getElementsByName('uid')[0].value;
+                if (!user) {
+                    alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+                    window.location.href = `/farmstory/user/login`;
+                }
+                const JsonData = {
+                    "product_id": prodNo,
+                    "count": quantity,
+                    "uid": user
+                }
+                const sessiondata = await fetchPost('/farmstory/market/cart', JsonData)
+                if(sessiondata.success){
+
+                }
+
+
+            })
+
+
 
         }
     </script>
@@ -216,7 +244,7 @@
                             </table>
                             <div class="buttons">
                                 <a th:href="@{/market/cart}" type="button" id ="addcart" class="add_to_cart">장바구니</a>
-                                <a href="#" type="button" class="buy_now">바로구매</a>
+                                <a th:href="@{/market/order}" type="button" id="buyNow" class="buy_now">바로구매</a>
                             </div> <!-- .buttons -->
                         </div> <!-- .product_info -->
                     </div>
