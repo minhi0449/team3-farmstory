@@ -1,3 +1,11 @@
+.aside_bg .cate_lnb li a{
+    position: absolute; left: 0; top:107px;
+    text-indent: -9999px; display: block; width: 176px; height: 29px;
+    background: url('../images/sub_cate2_lnb1.png') no-repeat;
+}
+.aside_bg .cate_lnb li a:hover{background: url('../images/sub_cate2_lnb1_ov.png') no-repeat; }
+
+
 .tabs {
     display: flex;
     width: 200px;

@@ -15,8 +15,7 @@ public class ArticleDTO {
 
     private int no;
 
-    @Builder.Default
-    private String cate = "free";
+    private String cate;
 
     private String title;
     private String content;

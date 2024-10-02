@@ -1,56 +1,33 @@
-/* header, footer 제외 공통부분 = common */
 
-/* main */
-#main{width: 100%; height: auto; position: relative; box-sizing: border-box;}
-.cf::after {content: ""; display: block; clear: both;}
-.mainIn{width: 980px; margin:0 auto; height: auto;}
-
-/* 서브 이미지 */
-.sub_bg{position: relative; width: 980px; height: 184px; background: url('../images/sub_top_bg.jpg') no-repeat center;}
-.sub_bg .sub_tit{position: absolute; top: 137px; left: 10px;  height: 37px;}
-
-/* aside 영역 (왼쪽) -------------------------------------------------- */
-.aside{position: relative; float: left; width: 179px; box-sizing: border-box;
-    width: 176px; height: 650px; background: url('../images/sub_aside_bg_line.png') right 0 no-repeat;}
-.aside_cate{
-    width: 103px; height: 45px; margin:16px 0 0 16px;
-    /* position: absolute; top: 16px; left: 16px;  */ /* 포지션으로 위치 잡을 경우 위치 값 */
-}
-.aside_bg{width: 176px; height: 650px; background: url('../images/sub_aside_bg_lnb.png') 0 20px no-repeat;}
-
-/* lnb */
-
-
-/* lnb a 공통값 */
-.aside_bg .cate_lnb li a{
-    position: absolute; 
-    left: 0;
-    text-indent: -9999px; display: block; width: 176px; height: 29px; 
-    background-repeat: no-repeat;
-    
-}
 /* lnb a 개별값 */
-.cate_lnb li:nth-child(1) a{top:107px; background-image: url('../images/sub_cate5_lnb1.png');}
-.cate_lnb li:nth-child(2) a{top:136px; background-image: url('../images/sub_cate5_lnb2.png');}
-.cate_lnb li:nth-child(3) a{top:165px; background-image: url('../images/sub_cate5_lnb3.png');}
-.cate_lnb li:nth-child(4) a{top:194px; background-image: url('../images/sub_cate5_lnb4.png');}
-.cate_lnb li:nth-child(5) a{top:223px; background-image: url('../images/sub_cate5_lnb5.png');}
+.aside_bg .cate_lnb1 li .lnb1{
+    position: absolute; left: 0; top:107px;
+    text-indent: -9999px; display: block; width: 176px; height: 29px;
+    background: url('../images/sub_cate5_lnb1.png') no-repeat;
+}
 
-/* lnb a 마우스오버시 공통값 */
-.cate_lnb li a:hover{
-    box-sizing: border-box;
-    background-repeat:  no-repeat;  
-    position: absolute; 
-    left: 0;
-    text-indent: -9999px; display: block; width: 176px; height: 29px; }
+.aside_bg .cate_lnb1 li .lnb2{
+    position: absolute; left: 0; top:137px;
+    text-indent: -9999px; display: block; width: 176px; height: 29px;
+    background: url('../images/sub_cate5_lnb2.png') no-repeat;
+}
 
-/* lnb a 마우스오버시 공통값 */
-.cate_lnb li:nth-child(1) a:hover{top:107px; background-image: url('../images/sub_cate5_lnb1_ov.png'); }
-.cate_lnb li:nth-child(2) a:hover{top:136px; background-image: url('../images/sub_cate5_lnb2_ov.png'); }
-.cate_lnb li:nth-child(3) a:hover{top:165px; background-image: url('../images/sub_cate5_lnb3_ov.png'); }
-.cate_lnb li:nth-child(4) a:hover{top:194px; background-image: url('../images/sub_cate5_lnb4_ov.png'); }
-.cate_lnb li:nth-child(5) a:hover{top:223px; background-image: url('../images/sub_cate5_lnb5_ov.png'); }
+.aside_bg .cate_lnb1 li .lnb3{
+    position: absolute; left: 0; top:167px;
+    text-indent: -9999px; display: block; width: 176px; height: 29px;
+    background: url('../images/sub_cate5_lnb3.png') no-repeat;
+}
 
+.aside_bg .cate_lnb1 li .lnb4{
+    position: absolute; left: 0; top:197px;
+    text-indent: -9999px; display: block; width: 176px; height: 29px;
+    background: url('../images/sub_cate5_lnb4.png') no-repeat;
+}
+.aside_bg .cate_lnb1 li .lnb5{
+    position: absolute; left: 0; top:227px;
+    text-indent: -9999px; display: block; width: 176px; height: 29px;
+    background: url('../images/sub_cate5_lnb5.png') no-repeat;
+}
 
 /* article 영역 (오른쪽)  ---------------------------------------------- */
 .article{position: relative; float:left; width: 802px; height: auto;}

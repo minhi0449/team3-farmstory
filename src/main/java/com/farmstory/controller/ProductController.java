@@ -1,8 +1,7 @@
-package com.farmstory.Controller;
+package com.farmstory.controller;
 
 import com.farmstory.dto.ProductDTO;
 
-import com.farmstory.entity.Product;
 import com.farmstory.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 // 수빈님 - product
 @Slf4j

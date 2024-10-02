@@ -16,12 +16,6 @@
     background: url('../images/sub_cate3_lnb3.png') no-repeat; 
 }
 
-.aside_bg .cate_lnb1 li .lnb1:hover{background: url('../images/sub_cate3_lnb1_ov.png') no-repeat; }
-
-.aside_bg .cate_lnb1 li .lnb2:hover{background: url('../images/sub_cate3_lnb2_ov.png') no-repeat; }
-
-.aside_bg .cate_lnb1 li .lnb3:hover{background: url('../images/sub_cate3_lnb3_ov.png') no-repeat; }
-
 
 /* 메인 콘텐츠 */
 /* 글목록 */

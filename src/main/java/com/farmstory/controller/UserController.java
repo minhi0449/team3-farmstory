@@ -1,4 +1,4 @@
-package com.farmstory.Controller;
+package com.farmstory.controller;
 
 import com.farmstory.dto.TermsDTO;
 import com.farmstory.dto.UserDTO;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller

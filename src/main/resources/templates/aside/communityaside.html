@@ -7,14 +7,16 @@
       <div class="sidebar">
         <div class="aside_cate">
           <img th:src="@{/images/sub_aside_cate5_tit.png}" alt="커뮤니티">
+          <span id="group" th:value="${group}">[[${group}]]</span>
+          <span id="cate" th:value="${cate}">[[${cate}]]</span>
         </div><!-- .aside_cate -->
         <div class="aside_bg">
-          <ul class="cate_lnb">
-            <li> <a th:href="@{/article/list/community/1}">공지사항</a></li>
-            <li> <a th:href="@{/article/list/community/2}">오늘의식단</a></li>
-            <li> <a th:href="@{/article/list/community/3}">나도요리사</a></li>
-            <li> <a th:href="@{/article/list/community/4}">1:1고객문의</a></li>
-            <li> <a th:href="@{/article/list/community/5}">자주묻는질문</a></li>
+          <ul class="cate_lnb1">
+            <li> <a th:href="@{/article/list/community/4}" id= "lnb1" class="lnb1">공지사항</a></li>
+            <li> <a th:href="@{/article/list/community/5}" id= "lnb2" class="lnb2">오늘의식단</a></li>
+            <li> <a th:href="@{/article/list/community/6}" id= "lnb3" class="lnb3">나도요리사</a></li>
+            <li> <a th:href="@{/article/list/community/7}" id= "lnb4" class="lnb4">1:1고객문의</a></li>
+            <li> <a th:href="@{/article/list/community/8}" id= "lnb5" class="lnb5">자주묻는질문</a></li>
           </ul><!-- .cate_lnb -->
         </div><!-- .aside_bg -->
       </div><!-- .sidebar -->
@@ -30,6 +32,38 @@
             <img th:src="@{/images/sub_page_nav_ico.gif}" alt="메뉴">
             <span>HOME </span>
             <span>커뮤니티 </span>
-            <strong>공지사항</strong>
+            <strong id="strong"></strong>
           </p>
         </nav>
+
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const cate = document.getElementById('cate').innerText;
+            const lnb1 = document.getElementById('lnb1');
+            const lnb2 = document.getElementById('lnb2');
+            const lnb3 = document.getElementById('lnb3');
+            const lnb4 = document.getElementById('lnb4');
+            const lnb5 = document.getElementById('lnb5');
+            const strong = document.getElementById('strong');
+
+            console.log(cate);
+            // 선택된 값에 따라 해당 lnb의 배경 이미지를 변경
+            if (cate == 4) {
+              lnb1.style.background = "url('/farmstory/images/sub_cate5_lnb1_ov.png') no-repeat";
+              strong.textContent = '공지사항';
+            } else if (cate == 5) {
+              lnb2.style.background = "url('/farmstory/images/sub_cate5_lnb2_ov.png') no-repeat";
+              strong.textContent = '오늘의식단';
+            } else if (cate == 6) {
+              lnb3.style.background = "url('/farmstory/images/sub_cate5_lnb3_ov.png') no-repeat";
+              strong.textContent = '나도요리사';
+            }else if (cate == 7) {
+              lnb4.style.background = "url('/farmstory/images/sub_cate5_lnb4_ov.png') no-repeat";
+              strong.textContent = '1:1고객문의';
+            }else if (cate == 8) {
+              lnb5.style.background = "url('/farmstory/images/sub_cate5_lnb5_ov.png') no-repeat";
+              strong.textContent = '자주묻는질문';
+            }
+          });
+
+        </script>

@@ -1,11 +1,9 @@
-package com.farmstory.Controller;
+package com.farmstory.controller;
 
 
 import com.farmstory.dto.CartRequestDTO;
 import com.farmstory.dto.CartResponseDTO;
-import com.farmstory.entity.User;
 import com.farmstory.service.CartService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
