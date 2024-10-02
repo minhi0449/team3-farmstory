@@ -2,6 +2,8 @@ package com.farmstory.service;
 
 import com.farmstory.dto.CartRequestDTO;
 import com.farmstory.dto.CartResponseDTO;
+import com.farmstory.dto.ProductDTO;
+import com.farmstory.dto.user.UserDTO;
 import com.farmstory.entity.Cart;
 import com.farmstory.entity.Product;
 import com.farmstory.entity.User;
@@ -65,6 +67,17 @@ public class CartService {
         return cartDtos;
     }
 
+    public CartResponseDTO getWithProductById(int id) {
+        Cart cart = cartRepository.findWithProductById(id);
+        CartResponseDTO cartResponseDTO = CartResponseDTO.fromEntity(cart);
+
+        Product product = cart.getProduct();
+        ProductDTO productDTO = ProductDTO.fromEntity(product);
+
+        cartResponseDTO.setProduct(productDTO);
+        return cartResponseDTO;
+    }
+
     public void deleteCart(List<Integer> data){
         for(Integer No : data){
             cartRepository.deleteById(No);
@@ -75,14 +88,14 @@ public class CartService {
 
     }
 
-//    public void UpdateCart(List<Integer> cartNo, List<Integer> count){
-//        for(int i = 0; i< cartNo.size(); i++){
-//            Integer cartno = cartNo.get(i);
-//            Integer quantity = count.get(i);
-//
-//            Cart cart = cartRepository.findById(cartno).orElse(null);
-//            cart.setCount(quantity);
-//            cartRepository.save(cart);
-//        }
-//    }
+    public void UpdateCart(List<Integer> cartNo, List<Integer> count){
+        for(int i = 0; i< cartNo.size(); i++){
+            Integer cartno = cartNo.get(i);
+            Integer quantity = count.get(i);
+
+            Cart cart = cartRepository.findById(cartno).orElse(null);
+            cart.setCount(quantity);
+            cartRepository.save(cart);
+        }
+    }
 }

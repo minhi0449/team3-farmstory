@@ -26,4 +26,11 @@ public class CartResponseDTO {
                 .build();
     }
 
+    public static CartResponseDTO fromEntity(Cart cart){
+        return CartResponseDTO.builder()
+                .cartNO(cart.getCartNo())
+                .count(cart.getCount())
+                .build();
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.farmstory.Controller;
+package com.farmstory.controller;
 
 
 import com.farmstory.dto.CartRequestDTO;
@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 // 지현님&상훈님 - market
@@ -28,7 +30,7 @@ public class CartController {
 
     // cart
     @GetMapping("/market/cart")
-    public String cart(@RequestParam String uid, Model model) {
+    public String cart(@RequestParam("uid") String uid, Model model) {
         long count = cartService.count();
         model.addAttribute("count", count);
 
@@ -53,26 +55,37 @@ public class CartController {
                 .ok()
                 .body(dto);
     }
-    @SuppressWarnings("unchecked") //차후 수정 필요
+
     @GetMapping("/market/order")
-    public String order(HttpSession session, Model model) {
-        List<Integer> carts = (List<Integer>) session.getAttribute("orderCart");
+    public String order(@AuthenticationPrincipal MyUserDetails userDetails, Model model, HttpSession session) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        List<Integer> sessionCarts = (List<Integer>) session.getAttribute("carts");
+        List<CartResponseDTO> carts = sessionCarts.stream().map(cartService::getWithProductById).toList();
+
+
+        User user = userDetails.getUser();
+
+        model.addAttribute("user", user);
         model.addAttribute("carts", carts);
+
         return "/market/order";
     }
 
     @PostMapping("/market/order")
-    public String orders(@RequestParam List<Integer> cartNo , @RequestParam List<Integer> count , HttpSession session) {
-//        cartService.UpdateCart(cartNo, count);
+    public String orders(@RequestParam List<Integer> cartNo, @RequestParam List<Integer> count, HttpSession session) {
+        cartService.UpdateCart(cartNo, count);
+        session.setAttribute("carts", cartNo);
         return "redirect:/market/order";
     }
 
     @ResponseBody
     @DeleteMapping("/market/cart/delete")
     public ResponseEntity<?> delete(@RequestBody List<Integer> data) {
-        if(data == null || data.isEmpty()){
+        if (data == null || data.isEmpty()) {
             return ResponseEntity.badRequest().body("삭제할 항목이 없습니다.");
-        }else {
+        } else {
             cartService.deleteCart(data);
             return ResponseEntity.ok().build();
         }

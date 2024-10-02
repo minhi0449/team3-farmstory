@@ -1,5 +1,7 @@
 package com.farmstory.dto.user;
 
+import com.farmstory.dto.ProductDTO;
+import com.farmstory.entity.Product;
 import com.farmstory.entity.User;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -61,6 +63,23 @@ public class UserDTO {
                 .regip(regip)
                 .createAt(createdAt)
                 .deletedAt(deletedAt)
+                .build();
+    }
+
+    public static UserDTO fromEntity(User user) {
+        return UserDTO.builder()
+                .uid(user.getUid())
+                .pass(user.getPass())
+                .name(user.getName())
+                .role(user.getRole())
+                .nick(user.getNick())
+                .email(user.getEmail())
+                .hp(user.getHp())
+                .grade(user.getGrade())
+                .zip(user.getZip())
+                .addr1(user.getAddr1())
+                .addr2(user.getAddr2())
+                .regip(user.getRegip())
                 .build();
     }
 }

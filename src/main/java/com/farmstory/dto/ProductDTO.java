@@ -63,4 +63,22 @@ public class ProductDTO {
                 .etc(etc)
                 .build();
     }
+
+    public static ProductDTO fromEntity(Product product){
+        return ProductDTO.builder()
+                .prodNo(product.getProdNo())
+                .prodName(product.getProdName())
+                .type(product.getType())
+                .price(product.getPrice())
+                .discount(product.getDiscount())
+                .deliveryfee(product.getDeliveryfee())
+                .stock(product.getStock())
+                .point(product.getPoint())
+                .img1(product.getImg1())
+                .img2(product.getImg2())
+                .img3(product.getImg3())
+                .regdate(product.getRegdate())
+                .etc(product.getEtc())
+                .build();
+    }
 }

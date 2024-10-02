@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../css/common.css">
     <link rel="stylesheet" href="../css/footer.css">
     <link rel="stylesheet" href="../css/order.css">
-    <script>
+    <script th:inline="javascript">
         let totalItems = 0;
         let totalPrice = 0;
         let totalDiscount = 0;
@@ -30,7 +30,9 @@
             const etcInput = document.querySelector(".etc");
 
 
-            const cartItems = JSON.parse(sessionStorage.getItem("cartItems"));
+            // const cartItems = JSON.parse(sessionStorage.getItem("cartItems"));
+            const cartItems = /*[[${carts}]]*/ [];
+            console.log(cartItems);
 
             // 주문하기 페이지로 이동 시 저장된 데이터로 테이블 업데이트
             updateOrderTable(cartItems);
@@ -127,7 +129,7 @@
             sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
         }
 
-        function updateOrderTable(items) {
+        function updateOrderTable(carts) {
             const table = document.querySelector('.tb1');
             table.innerHTML = `
         <colgroup>
@@ -152,29 +154,29 @@
         </tr>`;
 
 
-            items.forEach(item => {
-                const quantity = item.quantity || 1;
+            carts.forEach(cart => {
+                const quantity = cart.count || 1;
 
                 const tr = document.createElement('tr');
 
                 // 필요한 필드를 사용하여 렌더링
-                const subtotal = item.price * quantity - (item.price * item.discount / 100) * quantity;
-                const points = item.price * 0.01 * quantity; // 포인트 계산 (가격의 1%)
+                const subtotal = cart.product.price * quantity - (cart.product.price * cart.product.discount / 100) * quantity;
+                const points = cart.product.price * 0.01 * quantity; // 포인트 계산 (가격의 1%)
 
                 totalItems += quantity;
-                totalPrice += item.price * quantity;
-                totalDiscount += (item.price * item.discount / 100) * quantity;
-                totalDeliveryfee += item.deliveryfee;
+                totalPrice +=  Number(cart.product.price) * Number(quantity);
+                totalDiscount += (cart.product.price * cart.product.discount / 100) * quantity;
+                totalDeliveryfee += cart.product.deliveryfee;
                 totalPoints += points;
 
                 tr.innerHTML = `
-            <td><img src="../images/${item.img1}" alt="${item.prodName}" /></td>
-            <td>${item.type}</td>
-            <td>${item.prodName}</td>
+            <td><img src="/farmstory/productImg/${cart.product.img1}" alt="${cart.product.prodName}" /></td>
+            <td>${cart.product.type}</td>
+            <td>${cart.product.prodName}</td>
             <td>${quantity}</td> <!-- 수량을 클라이언트에서 사용 -->
-            <td>${item.discount}%</td>
+            <td>${cart.product.discount}%</td>
             <td>${points.toLocaleString()}p</td> <!-- 포인트를 5%로 계산 -->
-            <td>${item.price.toLocaleString()}</td>
+            <td>${cart.product.price.toLocaleString()}</td>
             <td><strong>${subtotal.toLocaleString()}</strong>원</td>
         `;
 
@@ -207,14 +209,14 @@
         }
 
         function transformCartItems(cartItems) {
-            return cartItems.map(item => {
+            return cartItems.map(cartItem => {
                 return {
-                    price: item.price,            // 기존 price 그대로 사용
-                    point: item.price * 0.1,      // 예시로 포인트는 가격의 10%로 설정
-                    discount: item.discount,      // 기존 discount 그대로 사용
-                    deliveryfee: item.deliveryfee,// 기존 deliveryfee 그대로 사용
-                    count: item.quantity,         // quantity를 count로 사용
-                    productId: item.productId            // id를 productId로 사용
+                    price: cartItem.product.price,            // 기존 price 그대로 사용
+                    point: cartItem.product.price * 0.1,      // 예시로 포인트는 가격의 10%로 설정
+                    discount: cartItem.product.discount,      // 기존 discount 그대로 사용
+                    deliveryfee: cartItem.product.deliveryfee,// 기존 deliveryfee 그대로 사용
+                    count: cartItem.product.quantity,         // quantity를 count로 사용
+                    productId: cartItem.product.prodNo            // id를 productId로 사용
                 };
             });
         }
@@ -319,13 +321,13 @@
                         <tr>
                             <th>주문자</th>
                             <td>
-                                <input type="text" class="uid" placeholder="홍길동">
+                                <input th:value="${user.name}" type="text" class="uid" placeholder="주문자" readonly>
                             </td>
                         </tr>
                         <tr>
                             <th>휴대폰</th>
                             <td>
-                                <input type="text" class="hp" placeholder="010-1234-1001">
+                                <input th:value="${user.hp}" type="text" class="hp" placeholder="010-1234-1001" readonly>
                             </td>
                         </tr>
                         <tr class="use cf">
