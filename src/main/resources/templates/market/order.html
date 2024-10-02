@@ -49,6 +49,8 @@
                     const addr2 = addr2Input.value;
                     const payMethod = getPaymentMethodValue();
                     const etc = etcInput.value;
+                    const uid = /*[[${user.uid}]]*/ ""
+                    console.log("uid : " + uid);
 
                     e.preventDefault();
                     if (confirm('정말 구매하시겠습니까?')) {
@@ -66,9 +68,9 @@
                                         zip,
                                         addr1,
                                         addr2,
-                                        payMethod,
+                                        uid,
                                         etc,
-                                        // TODO: uid,
+                                        payMethod,
                                         orderItems: transformCartItems(cartItems)
                                     }
                                 )
@@ -79,7 +81,7 @@
                                 throw new Error(errorData.message);
                             }
 
-                            location.href = "/farmstory/market/list";
+                            // location.href = "/farmstory/market/list";
                         } catch (e) {
                             alert("주문을 실패했습니다.")
                             console.error(e.message)

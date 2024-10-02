@@ -7,9 +7,11 @@ import com.farmstory.dto.user.UserDTO;
 import com.farmstory.entity.Order;
 import com.farmstory.entity.OrderItem;
 import com.farmstory.entity.Product;
+import com.farmstory.entity.User;
 import com.farmstory.repository.OrderItemRepository;
 import com.farmstory.repository.OrderRepository;
 import com.farmstory.repository.ProductRepository;
+import com.farmstory.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,6 +29,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
     public OrderResponseDTO getOrderById(int id) {
         Optional<Order> findOrder = orderRepository.findById(id);
@@ -75,13 +78,12 @@ public class OrderService {
     @Transactional
     public int createOrder(OrderCreateDTO orderDTO) {
 
-        // TODO: User 정보를 가져와 Order와 연결해야함
-        // User user = userRepository.findById(orderDTO.getUserId())
-        //         .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+         User user = userRepository.findById(orderDTO.getUid())
+                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
 
         // 1. Order 엔티티 생성 및 저장
         Order order = orderDTO.toEntity();
-        // order.setUser(user); // User와 연결
+         order.changeUser(user); // User와 연결
         orderRepository.save(order);
 
 

@@ -61,6 +61,11 @@ public class CartController {
         if (userDetails == null) {
             return "redirect:/user/login";
         }
+
+        if(session.getAttribute("carts") == null)
+        {
+            return "redirect:/market/cart?uid="+userDetails.getUsername();
+        }
         List<Integer> sessionCarts = (List<Integer>) session.getAttribute("carts");
         List<CartResponseDTO> carts = sessionCarts.stream().map(cartService::getWithProductById).toList();
 

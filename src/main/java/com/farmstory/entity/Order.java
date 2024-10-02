@@ -54,4 +54,8 @@ public class Order {
     @OneToMany(mappedBy = "order")
     @Builder.Default
     private List<OrderItem> orderItems = new ArrayList<>();
+
+    public void changeUser(User user) {
+        this.user = user;
+    }
 }
