@@ -68,13 +68,24 @@ public class SecurityConfig {
 
 
         // 인가 설정
+//        http.authorizeHttpRequests(authorize -> authorize
+//                .requestMatchers("/").permitAll()
+//                .requestMatchers("/article/**").permitAll()
+//                .requestMatchers("/category/**").permitAll()
+//                .requestMatchers("/article/write").authenticated()
+//                .requestMatchers("/article/delete/**").authenticated()
+//                .requestMatchers("/user/**").permitAll()
+//                .anyRequest().permitAll());
+
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/").permitAll()
-                .requestMatchers("/article/**").permitAll()
-                .requestMatchers("/category/**").permitAll()
-                .requestMatchers("/article/write").authenticated()
-                .requestMatchers("/article/delete/**").authenticated()
                 .requestMatchers("/user/**").permitAll()
+                .requestMatchers("/introduction/**").permitAll()
+                .requestMatchers("/userinfo/**").authenticated()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/crop/**").permitAll()
+                .requestMatchers("/community/**").permitAll()
+                .requestMatchers("/crop/CropWrite").authenticated()
                 .anyRequest().permitAll());
 
         // 기타 보안 설정

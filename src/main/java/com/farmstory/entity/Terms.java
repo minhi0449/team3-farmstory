@@ -2,7 +2,7 @@ package com.farmstory.entity;
 
 
 
-import com.farmstory.dto.TermsDTO;
+import com.farmstory.dto.user.TermsDTO;
 import jakarta.persistence.*;
 import lombok.*;
 

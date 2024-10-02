@@ -1,10 +1,8 @@
 package com.farmstory.dto;
 
+import com.farmstory.dto.user.UserDTO;
 import com.farmstory.entity.Cart;
 import lombok.*;
-
-import java.util.List;
-import java.util.stream.Collector;
 
 @Getter
 @Setter

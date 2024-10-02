@@ -1,6 +1,6 @@
 package com.farmstory.dto.article;
 
-import com.farmstory.dto.UserDTO;
+import com.farmstory.dto.user.UserDTO;
 import lombok.*;
 
 @Getter

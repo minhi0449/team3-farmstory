@@ -45,4 +45,6 @@
 
 /* btn - 취소, 다음*/
 .btn {display: block; float:left; width: 42px; height: 35px; line-height: 35px; text-align: center; border: 1px solid #bebebe; background: #fff;}
+.btnCancel:hover {color:#fff; border: 1px solid #555; background: #555; transition: all 0.4s;}
 .btnNext {margin-left: 3px;}
+.btnNext:hover {color:#fff; border: 1px solid #315519; background: #315519; transition: all 0.4s;}

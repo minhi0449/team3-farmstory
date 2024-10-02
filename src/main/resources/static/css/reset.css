@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 *{margin: 0; padding:0; font-family: "Inter", sans-serif; font-size: 12px; font-weight: 400;}
-html{color:#111; position:relative;}
+html{color:#111; position:relative; overflow-y: scroll; /* 항상 수직 스크롤바를 표시*/}
 html, body{height:100%; }
 body{font-size:12px; line-height:18px; font-family: 'Noto Sans KR', sans-serif;}
 a, address, blockquote, br, fieldset, legend, label, form, input, select, textarea, button, cite, code, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, div, iframe, ul, ol, li, hr, img {margin: 0; padding: 0;}

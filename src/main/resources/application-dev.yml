@@ -67,4 +67,8 @@ spring:
             location: uploads/
             max-file-size: 10MB
     thymeleaf:
+        cache: false
+        check-template-location: true
+        enabled: true
         prefix: classpath:/templates
+        suffix: .html

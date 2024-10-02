@@ -9,7 +9,8 @@
     <link rel="stylesheet" th:href="@{/css/user/terms.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms</title>
+    <script th:src="@{/js/util.js}"></script>
+    <title>이용약관</title>
     <!-- 
         작업내용 
         2024/08/26  하진희 terms html, css update
@@ -31,7 +32,7 @@
                                 <!-- 약관내용 -->
                                 <textarea th:text="${terms.terms}" readonly></textarea>
                                 <p>
-                                    <label><input type="checkbox" name="chk1"/>동의합니다.</label>
+                                    <label><input type="checkbox" id="chk1" name="chk1"/>동의합니다.</label>
                                 </p>
                             </td>
                         </tr>
@@ -43,7 +44,7 @@
                                 <!-- 개인정보 내용 -->
                                 <textarea th:text="${terms.privacy}" readonly></textarea>
                                 <p>
-                                    <label><input type="checkbox" name="chk2"/>&nbsp;동의합니다.</label>
+                                    <label><input type="checkbox" id="chk2" name="chk2"/>&nbsp;동의합니다.</label>
                                 </p>
                             </td>
                         </tr>
