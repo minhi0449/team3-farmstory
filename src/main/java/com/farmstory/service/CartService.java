@@ -74,4 +74,15 @@ public class CartService {
         return cartRepository.count();
 
     }
+
+//    public void UpdateCart(List<Integer> cartNo, List<Integer> count){
+//        for(int i = 0; i< cartNo.size(); i++){
+//            Integer cartno = cartNo.get(i);
+//            Integer quantity = count.get(i);
+//
+//            Cart cart = cartRepository.findById(cartno).orElse(null);
+//            cart.setCount(quantity);
+//            cartRepository.save(cart);
+//        }
+//    }
 }
