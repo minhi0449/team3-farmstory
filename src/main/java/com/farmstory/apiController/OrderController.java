@@ -1,9 +1,8 @@
 package com.farmstory.apiController;
 
-import com.farmstory.dto.order.OrderCreateRequestDTO;
-import com.farmstory.dto.order.OrderCreateResponseDTO;
-import com.farmstory.dto.order.OrderGetResponseDTO;
-import com.farmstory.dto.order.OrderGetResponseWithPriceDTO;
+import com.farmstory.dto.order.OrderCreateDTO;
+import com.farmstory.dto.order.OrderIdResponseDTO;
+import com.farmstory.dto.order.OrderWithTotalResponseDTO;
 import com.farmstory.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,16 +17,16 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderCreateResponseDTO> createOrder(@RequestBody OrderCreateRequestDTO orderDTO) {
+    public ResponseEntity<OrderIdResponseDTO> createOrder(@RequestBody OrderCreateDTO orderDTO) {
         log.debug("createOrder start");
         log.debug("orderDTO = {}", orderDTO.getOrderItems());
         int orderId = orderService.createOrder(orderDTO);
-        return ResponseEntity.status(201).body(new OrderCreateResponseDTO(orderId)) ;
+        return ResponseEntity.status(201).body(new OrderIdResponseDTO(orderId)) ;
     }
 
     @GetMapping("/{orderNo}")
-    public ResponseEntity<OrderGetResponseWithPriceDTO> getOrder(@PathVariable("orderNo") int orderNo) {
-        OrderGetResponseWithPriceDTO order = orderService.getOrderByIdWithPrice(orderNo);
+    public ResponseEntity<OrderWithTotalResponseDTO> getOrder(@PathVariable("orderNo") int orderNo) {
+        OrderWithTotalResponseDTO order = orderService.getOrderByIdWithPrice(orderNo);
         return ResponseEntity.status(200).body(order) ;
     }
 }

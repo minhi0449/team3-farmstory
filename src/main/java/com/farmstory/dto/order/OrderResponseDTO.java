@@ -4,16 +4,15 @@ import com.farmstory.entity.Order;
 import com.farmstory.enums.PayMethod;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class OrderCreateRequestDTO {
+public class OrderResponseDTO {
+    private int orderNo;
+
     private int point;
     private String receiver;
     private String receiverHp;
@@ -22,12 +21,11 @@ public class OrderCreateRequestDTO {
     private String addr2;
     private PayMethod payMethod;
     private String etc;
-    private String uid;
-    @Builder.Default
-    private List<OrderItemCreateRequestDTO> orderItems = new ArrayList<>();
+    private String createdAt;
 
-    public static OrderCreateRequestDTO fromEntity(Order order) {
-        return OrderCreateRequestDTO.builder()
+    public static OrderResponseDTO fromEntity(Order order) {
+        return OrderResponseDTO.builder()
+                .orderNo(order.getOrderNo())
                 .point(order.getPoint())
                 .receiver(order.getReceiver())
                 .receiverHp(order.getReceiverHp())
@@ -36,19 +34,21 @@ public class OrderCreateRequestDTO {
                 .addr2(order.getAddr2())
                 .payMethod(order.getPayMethod())
                 .etc(order.getEtc())
+                .createdAt(order.getCreateAt() != null ? order.getCreateAt().toString() : null)
                 .build();
     }
 
-    public Order toEntity() {
+    public static Order toEntity(OrderResponseDTO dto) {
         return Order.builder()
-                .point(this.getPoint())
-                .receiver(this.getReceiver())
-                .receiverHp(this.getReceiverHp())
-                .zip(this.getZip())
-                .addr1(this.getAddr1())
-                .addr2(this.getAddr2())
-                .payMethod(this.getPayMethod())
-                .etc(this.getEtc())
+                .orderNo(dto.getOrderNo())
+                .point(dto.getPoint())
+                .receiver(dto.getReceiver())
+                .receiverHp(dto.getReceiverHp())
+                .zip(dto.getZip())
+                .addr1(dto.getAddr1())
+                .addr2(dto.getAddr2())
+                .payMethod(dto.getPayMethod())
+                .etc(dto.getEtc())
                 .build();
     }
 }

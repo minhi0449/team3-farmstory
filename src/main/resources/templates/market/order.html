@@ -19,8 +19,6 @@
         let totalOrderAmount = 0;
 
         window.onload = function () {
-            this.saveSampleData();
-
             const receiverInput = document.querySelector(".receiver");
             const receiverHpInput = document.querySelector(".receiverHp");
             const pointInput = document.querySelector(".point");
@@ -90,43 +88,6 @@
                     }
                 };
             }
-        }
-
-        function saveSampleData() {
-            // 예를 들어, 사용자가 장바구니에 아이템을 추가하면 다음과 같이 아이템의 전체 데이터를 저장합니다.
-            const cartItems = [
-                {
-                    id: 1,
-                    prodName: "사과",
-                    type: "과일",
-                    price: 10000,
-                    discount: 10,
-                    deliveryfee: 1000,
-                    stock: 1,
-                    img1: "market_item1.jpg",
-                    img2: "img2",
-                    img3: "img3",
-                    quantity: 2,
-                    productId: 22
-                },
-                {
-                    id: 2,
-                    prodName: "바나나",
-                    type: "과일",
-                    price: 20000,
-                    discount: 20,
-                    deliveryfee: 2000,
-                    stock: 2,
-                    img1: "market_item1.jpg",
-                    img2: "img2",
-                    img3: "img3",
-                    quantity: 1,
-                    productId: 24
-                }
-            ];
-
-            // sessionStorage에 장바구니 데이터 저장 (객체를 JSON 문자열로 변환하여 저장)
-            sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
         }
 
         function updateOrderTable(carts) {

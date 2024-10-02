@@ -74,12 +74,12 @@
                     </tr>
                     <tr th:each="orderItem : ${orderItemPage.content}">
                         <td th:text="${orderItem.order.orderNo}">1001</td>
-                        <td><img th:src="@{|/productImg/${orderItem.product.img}|}" alt="사과 샘플"/></td>
+                        <td><img th:src="@{|/productImg/${orderItem.product.img1}|}" alt="사과 샘플"/></td>
                         <td th:text="${orderItem.product.prodName}">사과 500g</td>
                         <td th:text="${orderItem.price}">4,000원</td>
                         <td th:text="${orderItem.count}">2</td>
                         <td th:text="${orderItem.count * orderItem.price}" >11,000원</td>
-                        <td th:text="${orderItem.order.userName}">김유신</td>
+                        <td th:text="${orderItem.order.user.name}">김유신</td>
                         <td th:text="${orderItem.order.createdAt}">2023-01-01 13:06:14</td>
                         <td><button class="detail-btn" th:data-order-id="${orderItem.order.orderNo}">[상세확인]</button></td>
                     </tr>

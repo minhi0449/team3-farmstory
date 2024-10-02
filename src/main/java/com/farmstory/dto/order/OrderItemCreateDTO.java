@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrderItemCreateRequestDTO {
+public class OrderItemCreateDTO {
     private int price;
     private int point;
     private int discount;

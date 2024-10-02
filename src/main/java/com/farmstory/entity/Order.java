@@ -44,6 +44,7 @@ public class Order {
     @CreationTimestamp
     private LocalDateTime createAt;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uid")
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -51,5 +52,6 @@ public class Order {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "order")
+    @Builder.Default
     private List<OrderItem> orderItems = new ArrayList<>();
 }

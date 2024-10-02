@@ -28,6 +28,7 @@ public class OrderItem {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Order order;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prodNo")
     @OnDelete(action = OnDeleteAction.CASCADE)

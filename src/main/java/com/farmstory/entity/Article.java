@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -43,12 +44,15 @@ public class Article {
     @Transient // 엔티티 속성에서 제외시키는 어노테이션, 테이블의 컬럼 생성 안함
     private String nick;
 
-
+    @ToString.Exclude
     @OneToMany(mappedBy = "ano") // mappedBy는 매핑되는 엔티티(테이블)의 FK 컬럼
-    private List<FileEntity> fileList;
+    @Builder.Default
+    private List<FileEntity> fileList = new ArrayList<>();
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "parent")
-    private List<Comment> commentList;
+    @Builder.Default
+    private List<Comment> commentList = new ArrayList<>();
 
     public void addnick(String nick) {
         this.nick = nick;

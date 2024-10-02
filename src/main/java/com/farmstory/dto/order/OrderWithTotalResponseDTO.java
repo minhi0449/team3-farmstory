@@ -1,7 +1,6 @@
 package com.farmstory.dto.order;
 
 import com.farmstory.entity.Order;
-import com.farmstory.entity.OrderItem;
 import com.farmstory.enums.PayMethod;
 import lombok.*;
 
@@ -11,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class OrderGetResponseWithPriceDTO {
+public class OrderWithTotalResponseDTO {
     private int orderNo;
 
     private int point;
@@ -25,8 +24,8 @@ public class OrderGetResponseWithPriceDTO {
     private String createdAt;
     private int totalPrice;
 
-    public static OrderGetResponseWithPriceDTO fromEntity(Order order, int totalPrice) {
-        return OrderGetResponseWithPriceDTO.builder()
+    public static OrderWithTotalResponseDTO fromEntity(Order order, int totalPrice) {
+        return OrderWithTotalResponseDTO.builder()
                 .orderNo(order.getOrderNo())
                 .point(order.getPoint())
                 .receiver(order.getReceiver())
@@ -41,7 +40,7 @@ public class OrderGetResponseWithPriceDTO {
                 .build();
     }
 
-    public static Order toEntity(OrderGetResponseWithPriceDTO dto) {
+    public static Order toEntity(OrderWithTotalResponseDTO dto) {
         return Order.builder()
                 .orderNo(dto.getOrderNo())
                 .point(dto.getPoint())

@@ -1,11 +1,12 @@
 package com.farmstory.service;
 
+import com.farmstory.dto.ProductDTO;
 import com.farmstory.dto.order.*;
 import com.farmstory.dto.PageResponseDTO;
+import com.farmstory.dto.user.UserDTO;
 import com.farmstory.entity.Order;
 import com.farmstory.entity.OrderItem;
 import com.farmstory.entity.Product;
-import com.farmstory.entity.User;
 import com.farmstory.repository.OrderItemRepository;
 import com.farmstory.repository.OrderRepository;
 import com.farmstory.repository.ProductRepository;
@@ -16,9 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,45 +28,52 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
 
-    public OrderGetResponseDTO getOrderById(int id) {
+    public OrderResponseDTO getOrderById(int id) {
         Optional<Order> findOrder = orderRepository.findById(id);
         Order order = findOrder.orElseThrow(() -> new IllegalArgumentException("해당 주문이 존재하지 않습니다."));
-        return OrderGetResponseDTO.fromEntity(order);
+        return OrderResponseDTO.fromEntity(order);
     }
 
-    public OrderGetResponseWithPriceDTO getOrderByIdWithPrice(int id) {
+    public OrderWithTotalResponseDTO getOrderByIdWithPrice(int id) {
         Optional<Order> findOrder = orderRepository.findByIdWithPrice(id);
         Order order = findOrder.orElseThrow(() -> new IllegalArgumentException("해당 주문이 존재하지 않습니다."));
         int totalPrice = order.getOrderItems().stream()
                 .mapToInt(orderItem -> orderItem.getPrice() * orderItem.getCount())
                 .sum();
 
-        return OrderGetResponseWithPriceDTO.fromEntity(order, totalPrice);
+        return OrderWithTotalResponseDTO.fromEntity(order, totalPrice);
     }
 
-    public PageResponseDTO<OrderItemsGetResponseDTO> getOrderItems(Pageable pageable) {
+    public PageResponseDTO<OrderItemsResponseDTO> getOrderItems(Pageable pageable) {
         Page<OrderItem> orderItems = orderItemRepository.findAll(pageable);
-        Page<OrderItemsGetResponseDTO> dtoPage = orderItems.map(OrderItemsGetResponseDTO::fromEntity);
+        Page<OrderItemsResponseDTO> dtoPage = orderItems.map(OrderItemsResponseDTO::fromEntity);
         return PageResponseDTO.fromPage(dtoPage);
     }
 
-    public PageResponseDTO<OrderItemsGetResponseDTO> getOrderItemsByOrderNo(int orderNo, Pageable pageable) {
+    public PageResponseDTO<OrderItemsResponseDTO> getOrderItemsByOrderNo(int orderNo, Pageable pageable) {
         Page<OrderItem> orderItems = orderItemRepository.findByOrderNo(orderNo, pageable);
-        Page<OrderItemsGetResponseDTO> orderItemDto = orderItems.map(OrderItemsGetResponseDTO::fromEntity);
+        Page<OrderItemsResponseDTO> orderItemDto = orderItems.map(OrderItemsResponseDTO::fromEntity);
         return PageResponseDTO.fromPage(orderItemDto);
     }
 
-    public PageResponseDTO<OrderItemsGetByUidResponseDTO> getOrderItemsByUid(String uid, Pageable pageable) {
+    public PageResponseDTO<OrderItemWithOrderWithProductResponseDTO> getOrderItemsByUid(String uid, Pageable pageable) {
         System.out.println("uid = " + uid);
         System.out.println("pageable = " + pageable);
         Page<OrderItem> orderItems = orderItemRepository.findByUidWithOrderAndProduct(uid, pageable);
         System.out.println("orderItems = " + orderItems.getContent());
-        Page<OrderItemsGetByUidResponseDTO> orderItemDto = orderItems.map(OrderItemsGetByUidResponseDTO::fromEntity);
+        Page<OrderItemWithOrderWithProductResponseDTO> orderItemDto = orderItems.map(orderItem -> {
+            OrderItemWithOrderWithProductResponseDTO orderItemD = OrderItemWithOrderWithProductResponseDTO.fromEntity(orderItem);
+            orderItemD.setProduct(ProductDTO.fromEntity(orderItem.getProduct()));
+            OrderWithUserResponseDTO order = OrderWithUserResponseDTO.fromEntity(orderItem.getOrder());
+            order.setUser(UserDTO.fromEntity(orderItem.getOrder().getUser()));
+            orderItemD.setOrder(order);
+            return orderItemD;
+        });
         return PageResponseDTO.fromPage(orderItemDto);
     }
 
     @Transactional
-    public int createOrder(OrderCreateRequestDTO orderDTO) {
+    public int createOrder(OrderCreateDTO orderDTO) {
 
         // TODO: User 정보를 가져와 Order와 연결해야함
         // User user = userRepository.findById(orderDTO.getUserId())

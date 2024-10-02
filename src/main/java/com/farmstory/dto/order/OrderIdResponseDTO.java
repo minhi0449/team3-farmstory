@@ -7,6 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class OrderCreateResponseDTO {
+public class OrderIdResponseDTO {
     private int orderId;
 }

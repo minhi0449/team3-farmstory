@@ -59,7 +59,7 @@ public class CartController {
     @GetMapping("/market/order")
     public String order(@AuthenticationPrincipal MyUserDetails userDetails, Model model, HttpSession session) {
         if (userDetails == null) {
-            return "redirect:/login";
+            return "redirect:/user/login";
         }
         List<Integer> sessionCarts = (List<Integer>) session.getAttribute("carts");
         List<CartResponseDTO> carts = sessionCarts.stream().map(cartService::getWithProductById).toList();

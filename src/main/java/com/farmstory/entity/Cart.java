@@ -19,6 +19,7 @@ public class Cart {
     private int count;
 
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
@@ -35,6 +36,7 @@ public class Cart {
                 .build();
     }
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "uid")
     private User user;

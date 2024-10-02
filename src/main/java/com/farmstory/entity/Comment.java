@@ -28,6 +28,7 @@ public class Comment {
     @CreationTimestamp
     private LocalDateTime rdate;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "writer")
     private User user;
