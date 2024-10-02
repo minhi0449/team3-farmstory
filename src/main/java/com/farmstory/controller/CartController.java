@@ -74,10 +74,10 @@ public class CartController {
     }
 
     @PostMapping("/market/order")
-    public String orders(@RequestParam List<Integer> cartNo, @RequestParam List<Integer> count, HttpSession session) {
+    public ResponseEntity<?> orders(@RequestParam("cartNo") List<Integer> cartNo, @RequestParam("count") List<Integer> count, HttpSession session) {
         cartService.UpdateCart(cartNo, count);
         session.setAttribute("carts", cartNo);
-        return "redirect:/market/order";
+        return ResponseEntity.ok().build();
     }
 
     @ResponseBody
