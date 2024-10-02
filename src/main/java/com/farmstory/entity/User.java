@@ -3,6 +3,7 @@ package com.farmstory.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -34,6 +35,7 @@ public class User {
     private String deletedAt;
 
     // 추가 필드
+    @Transient
     private String encodedPassword;
 
 //    public UserDTO toDTO() {
