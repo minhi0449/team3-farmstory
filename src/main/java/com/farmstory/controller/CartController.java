@@ -1,4 +1,4 @@
-package com.farmstory.controller;
+package com.farmstory.Controller;
 
 
 import com.farmstory.dto.CartRequestDTO;
@@ -6,6 +6,7 @@ import com.farmstory.dto.CartResponseDTO;
 import com.farmstory.entity.User;
 import com.farmstory.security.MyUserDetails;
 import com.farmstory.service.CartService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class CartController {
 
     // cart
     @GetMapping("/market/cart")
-    public String cart(@RequestParam("uid") String uid, Model model) {
+    public String cart(@RequestParam String uid, Model model) {
         long count = cartService.count();
         model.addAttribute("count", count);
 
@@ -52,16 +53,20 @@ public class CartController {
                 .ok()
                 .body(dto);
     }
+    @SuppressWarnings("unchecked") //차후 수정 필요
     @GetMapping("/market/order")
-    public String order(@AuthenticationPrincipal MyUserDetails userDetails, Model model) {
-        if(userDetails == null)
-        {
-            return "redirect:/login";
-        }
-        User user = userDetails.getUser();
-        model.addAttribute("user", user);
+    public String order(HttpSession session, Model model) {
+        List<Integer> carts = (List<Integer>) session.getAttribute("orderCart");
+        model.addAttribute("carts", carts);
         return "/market/order";
     }
+
+    @PostMapping("/market/order")
+    public String orders(@RequestParam List<Integer> cartNo , @RequestParam List<Integer> count , HttpSession session) {
+//        cartService.UpdateCart(cartNo, count);
+        return "redirect:/market/order";
+    }
+
     @ResponseBody
     @DeleteMapping("/market/cart/delete")
     public ResponseEntity<?> delete(@RequestBody List<Integer> data) {

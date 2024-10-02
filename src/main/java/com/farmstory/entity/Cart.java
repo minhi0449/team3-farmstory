@@ -4,7 +4,7 @@ import com.farmstory.dto.CartRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
-
+@Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
