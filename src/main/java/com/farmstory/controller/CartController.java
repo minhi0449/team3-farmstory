@@ -29,7 +29,7 @@ public class CartController {
 //    private final ProductService productService;
 
     // cart
-    @GetMapping("/market/cart")
+    @GetMapping("/market/cart") //cart 화면 구현
     public String cart(@RequestParam("uid") String uid, Model model) {
         long count = cartService.count();
         model.addAttribute("count", count);
@@ -43,7 +43,7 @@ public class CartController {
     }
 
     @ResponseBody
-    @PostMapping("/market/cart")
+    @PostMapping("/market/cart") //view -> ajax
     public ResponseEntity<CartRequestDTO> cart(@RequestBody CartRequestDTO cartRequestDTO) {
         String uid = cartRequestDTO.getUid();
         log.info("uid :" + uid);
@@ -77,7 +77,7 @@ public class CartController {
         return "/market/order";
     }
 
-    @PostMapping("/market/order")
+    @PostMapping("/market/order") // 주문하기 -> 카운트업데이트 후 세션저장
     public ResponseEntity<?> orders(@RequestParam("cartNo") List<Integer> cartNo, @RequestParam("count") List<Integer> count, HttpSession session) {
         cartService.UpdateCart(cartNo, count);
         session.setAttribute("carts", cartNo);
