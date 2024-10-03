@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="../css/common.css">
     <link rel="stylesheet" href="../css/footer.css">
     <link rel="stylesheet" href="../css/order.css">
-
+    <script th:src="@{/js/util.js}"></script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script th:inline="javascript">
         let totalItems = 0;
         let totalPrice = 0;
@@ -329,10 +330,10 @@
                         <tr>
                             <th class="delivery_addr">배송주소</th>
                             <td class="cf">
-                                <input type="text" class="zip" placeholder="" title="우편번호 검색칸">
-                                <a href="#"><img src="../images/btn_post_search.gif" alt="우편번호 검색" class="post_sch_btn"></a>
-                                <input type="text" class="addr1" placeholder="기본주소 검색">
-                                <input type="text" class="addr2" placeholder="상세주소 입력">
+                                <input type="text" id="inputZip" class="zip" placeholder="" title="우편번호 검색칸" readonly>
+                                <button onclick="postcode()"><img src="../images/btn_post_search.gif" alt="우편번호 검색" class="post_sch_btn"></button>
+                                <input type="text" id="inputAddr1" class="addr1" placeholder="기본주소 검색" readonly>
+                                <input type="text" id="inputAddr2" class="addr2" placeholder="상세주소 입력">
                             </td>
                         </tr>
                         <tr>
