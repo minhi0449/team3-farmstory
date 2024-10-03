@@ -47,15 +47,22 @@ public class OrderService {
         return OrderWithTotalResponseDTO.fromEntity(order, totalPrice);
     }
 
-    public PageResponseDTO<OrderItemsResponseDTO> getOrderItems(Pageable pageable) {
-        Page<OrderItem> orderItems = orderItemRepository.findAll(pageable);
-        Page<OrderItemsResponseDTO> dtoPage = orderItems.map(OrderItemsResponseDTO::fromEntity);
-        return PageResponseDTO.fromPage(dtoPage);
+    public PageResponseDTO<OrderItemWithOrderWithProductResponseDTO> getOrderItems(Pageable pageable) {
+        Page<OrderItem> orderItems = orderItemRepository.findAllWithOrderAndProduct(pageable);
+        Page<OrderItemWithOrderWithProductResponseDTO> orderItemDto = orderItems.map(orderItem -> {
+            OrderItemWithOrderWithProductResponseDTO orderItemD = OrderItemWithOrderWithProductResponseDTO.fromEntity(orderItem);
+            orderItemD.setProduct(ProductDTO.fromEntity(orderItem.getProduct()));
+            OrderWithUserResponseDTO order = OrderWithUserResponseDTO.fromEntity(orderItem.getOrder());
+            order.setUser(UserDTO.fromEntity(orderItem.getOrder().getUser()));
+            orderItemD.setOrder(order);
+            return orderItemD;
+        });
+        return PageResponseDTO.fromPage(orderItemDto);
     }
 
-    public PageResponseDTO<OrderItemsResponseDTO> getOrderItemsByOrderNo(int orderNo, Pageable pageable) {
+    public PageResponseDTO<OrderItemResponseDTO> getOrderItemsByOrderNo(int orderNo, Pageable pageable) {
         Page<OrderItem> orderItems = orderItemRepository.findByOrderNo(orderNo, pageable);
-        Page<OrderItemsResponseDTO> orderItemDto = orderItems.map(OrderItemsResponseDTO::fromEntity);
+        Page<OrderItemResponseDTO> orderItemDto = orderItems.map(OrderItemResponseDTO::fromEntity);
         return PageResponseDTO.fromPage(orderItemDto);
     }
 
@@ -125,5 +132,11 @@ public class OrderService {
 
     public int getOrderItemCountByUid(String uid) {
         return orderItemRepository.countByUid(uid);
+    }
+
+    public PageResponseDTO<OrderResponseDTO> getOrdersByUid(String uid, Pageable pageable) {
+        Page<Order> ordersPage = orderRepository.findAllByUid(uid, pageable);
+        Page<OrderResponseDTO> map = ordersPage.map(OrderResponseDTO::fromEntity);
+        return PageResponseDTO.fromPage(map);
     }
 }

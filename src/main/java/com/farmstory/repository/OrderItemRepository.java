@@ -25,4 +25,8 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Integer> {
 
     @Query("SELECT COUNT(*) FROM OrderItem oi WHERE oi.order.user.uid =:uid")
     int countByUid(@Param("uid") String uid);
+
+    @EntityGraph(attributePaths = {"product", "order", "order.user"})
+    @Query("SELECT oi FROM OrderItem oi")
+    Page<OrderItem> findAllWithOrderAndProduct(Pageable pageable);
 }

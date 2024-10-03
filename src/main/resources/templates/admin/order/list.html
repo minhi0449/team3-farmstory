@@ -4,89 +4,226 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/style_admin.css}">
-    <title>PRODUCT::LIST</title>
+    <title>주문 목록</title>
+    <style>
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            width: 400px;
+        }
+
+        .modal-header {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            text-align: right;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .pagination a {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            text-decoration: none;
+            margin: 0 5px;
+            color: black;
+        }
+
+        .pagination .active a {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .pagination li {
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
-    <!-- wrapper -->
-    <div id="wrapper">
-        <th:block th:include ="/admin/include/header.html"/>
+<!-- wrapper -->
+<div id="wrapper">
+    <th:block th:include ="/admin/include/header.html"/>
 
-        <main>
-            <div class="mainIn list">
-                <th:block th:include ="/admin/include/aside.html"/>
-                <div class="section list">
-                    <section>
-                        <div class="main_container">
-                            <div class="main_top"><span>주문목록</span></div>
-                            <div class="status_table" id="orderList">
-                                <table class="Order">
-                                    <thead>
-                                        <tr>
-                                            <th><input type="checkbox" name="product_list_checkbox" id="plcheck"></th>
-                                            <th>주문번호</th>
-                                            <th>상품명</th>
-                                            <th>판매가격</th>
-                                            <th>수량</th>
-                                            <th>배송비</th>
-                                            <th>합계</th>
-                                            <th>주문자</th>
-                                            <th>주문일 </th>
-                                            <th>확인 </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><input type="checkbox" name="product_list_checkbox" id="plcheck"></td>
-                                            <td>1001</td>
-                                            <td>사과500g</td>
-                                            <td>4,000원</td>
-                                            <td>2</td>
-                                            <td>3,000원</td>
-                                            <td>11,000원</td>
-                                            <td>김유신</td>
-                                            <td>2023-01-01 13:06:14</td>
-                                            <td><a href="#">[상세확인]</a></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div class="btn_group">
-                                        <a href="#"  class="deletebtn">선택삭제</a>
-                                </div><!--btn_group end-->
+    <main>
+        <div class="mainIn list">
+            <th:block th:include ="/admin/include/aside.html"/>
+            <div class="section list">
+                <section>
+                    <div class="main_container">
+                        <div class="main_top"><span>주문 목록</span></div>
+                        <div class="status_table" id="orderList">
+                            <table class="Order">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" name="product_list_checkbox"></th>
+                                    <th>주문 번호</th>
+                                    <th>상품명</th>
+                                    <th>판매 가격</th>
+                                    <th>수량</th>
+                                    <th>배송비</th>
+                                    <th>합계</th>
+                                    <th>주문자</th>
+                                    <th>주문일</th>
+                                    <th>확인</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- 데이터 출력 -->
+                                <tr th:each="orderItem : ${orderItemsPage.content}">
+                                    <td><input type="checkbox" name="product_list_checkbox" id="plcheck"></td>
+                                    <td th:text="${orderItem.order.orderNo}">1001</td>
+                                    <td th:text="${orderItem.product.prodName}">사과 500g</td>
+                                    <td th:text="|${#numbers.formatInteger(orderItem.price, 0, 'COMMA')}원|">4,000원</td>
+                                    <td th:text="${orderItem.count}">2</td>
+                                    <td th:text="|${#numbers.formatInteger(orderItem.deliveryfee, 0, 'COMMA')}원|">3,000원</td>
+                                    <td th:text="|${#numbers.formatInteger(orderItem.price*orderItem.count, 0, 'COMMA')}원|">11,000원</td>
+                                    <td th:text="${orderItem.order.user.name}">김유신</td>
+                                    <td th:text="${orderItem.order.createdAt}">2023-01-01 13:06:14</td>
+                                    <td><a href="#" class="detail-btn" th:data-order-id="${orderItem.order.orderNo}">[상세 확인]</a></td>
+                                </tr>
+                                <!-- 데이터가 없는 경우 -->
+                                <tr th:if="${orderItemsPage.content.size() == 0}">
+                                    <td colspan="10" style="text-align: center;">주문이 없습니다.</td>
+                                </tr>
+                                </tbody>
+                            </table>
 
-                                <div class="pages">
-                                    <ul>
-                                     <li><a href="#">&nbsp;[1]</a></li>
-                                     <li><a href="#">[2]</a></li>
-                                     <li><a href="#">[3]</a></li>
-                                     <li><a href="#">[4]</a></li>
-                                     <li><a href="#">[5]&nbsp;</a></li>
-                                    </ul>
-                                </div>
-                               
-                            </div><!--status-table end-->
+                            <!-- 페이지네이션 버튼 -->
+                            <div class="pagination" style="text-align: center; margin-top: 20px;">
+                                <ul style="list-style: none; display: inline-block;">
+                                    <!-- 이전 페이지 버튼 -->
+                                    <li th:if="${orderItemsPage.currentPage > 0}" style="display: inline-block;">
+                                        <a th:href="@{/admin/order/list(page=${orderItemsPage.currentPage - 1}, size=${orderItemsPage.pageSize})}"
+                                           style="padding: 5px 10px; border: 1px solid #ccc;">이전</a>
+                                    </li>
 
-                           
-                        </div><!--main-container-->
-                    </section><!-- section end-->
-                </div><!-- .section end-->
-               
-            </div><!--mainIn-->
-        </main><!--main end-->
+                                    <!-- 페이지 번호 출력 (현재 페이지 기준으로 앞뒤로 최대 2페이지씩 표시) -->
+                                    <li th:each="i : ${#numbers.sequence(orderItemsPage.currentPage > 2 ? orderItemsPage.currentPage - 2 : 0, orderItemsPage.currentPage + 2 > orderItemsPage.totalPages - 1 ? orderItemsPage.totalPages - 1 : orderItemsPage.currentPage + 2)}"
+                                        th:classappend="${i == orderItemsPage.currentPage} ? 'active'">
+                                        <a th:href="@{/admin/order/list(page=${i}, size=${orderItemsPage.pageSize})}"
+                                           th:text="${i + 1}"
+                                           style="padding: 5px 10px; border: 1px solid #ccc;"></a>
+                                    </li>
 
-        <footer>
-            <div class="fIn">
-                <div class="fttxt">
-                    <span>FARMSTORY ADMINISTRATOR Version 1.0.1</span>
-                </div>
-                <div class="copy">
-                    <p>
-                        <span>Copyright</span> 김철학(개발에반하다.) All rights reserved.
-                    </p>
-                    
-                </div>
+                                    <!-- 다음 페이지 버튼 -->
+                                    <li th:if="${!orderItemsPage.isLast}" style="display: inline-block;">
+                                        <a th:href="@{/admin/order/list(page=${orderItemsPage.currentPage + 1}, size=${orderItemsPage.pageSize})}"
+                                           style="padding: 5px 10px; border: 1px solid #ccc;">다음</a>
+                                    </li>
+                                </ul>
+                            </div><!-- pages end -->
+                        </div><!--status-table end-->
+                    </div><!--main-container-->
+                </section><!-- section end-->
+            </div><!-- .section end-->
+        </div><!--mainIn-->
+    </main><!--main end-->
+    <footer>
+        <div class="fIn">
+            <div class="fttxt">
+                <span>FARMSTORY ADMINISTRATOR Version 1.0.1</span>
             </div>
-        </footer><!--footer-->
+            <div class="copy">
+                <p>
+                    <span>Copyright</span> 김철학(개발에반하다.) All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer><!--footer-->
+</div> <!--wrapper end-->
 
-    </div> <!--wrapper end-->
+<!-- 모달 배경 추가 -->
+<div id="modalBackground" class="modal-overlay"></div>
+
+<!-- 모달 HTML -->
+<div id="orderDetailModal" class="modal">
+    <h3>주문 상세 정보</h3>
+    <div id="modalContent">
+        <!-- API로 받아온 주문 정보가 여기에 표시됩니다 -->
+    </div>
+    <button onclick="closeModal()" style="background: #007bff; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;">닫기</button>
+</div>
+
+<script>
+    // 상세 확인 버튼 클릭 이벤트 처리
+    document.querySelectorAll('.detail-btn').forEach(button => {
+        button.addEventListener('click', async (event) => {
+            const orderId = event.target.getAttribute('data-order-id');
+
+            // API 통신
+            try {
+                const response = await fetch(`/farmstory/api/order/${orderId}`); // API 엔드포인트
+                if (response.ok) {
+                    const orderDetail = await response.json();
+                    openModal(orderDetail);
+                } else {
+                    alert('주문 정보를 불러오는데 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('API 통신 중 오류:', error);
+                alert('오류가 발생했습니다.');
+            }
+        });
+    });
+
+    // 모달 열기 함수
+    function openModal(orderDetail) {
+        console.log(orderDetail); // 확인용 로그
+
+        // 모달 내용 설정
+        const modalContent = document.getElementById('modalContent');
+        modalContent.innerHTML = `
+            <p>주문번호: ${orderDetail.orderNo}</p>
+            <p>포인트: ${orderDetail.point}</p>
+            <p>받는자: ${orderDetail.receiver}</p>
+            <p>받는자 번호: ${orderDetail.receiverHp}</p>
+            <p>우편번호: ${orderDetail.zip}</p>
+            <p>주소: ${orderDetail.addr1}</p>
+            <p>상세주소: ${orderDetail.addr2}</p>
+            <p>주문날짜: ${new Date(orderDetail.createdAt).toLocaleString()}</p>
+            <p>가격: ${orderDetail.totalPrice.toLocaleString()}원</p>
+            <p>기타: ${orderDetail.etc}</p>
+        `;
+
+        // 모달과 배경 표시
+        document.getElementById('modalBackground').style.display = 'block';
+        document.getElementById('orderDetailModal').style.display = 'block';
+    }
+
+    // 모달 닫기 함수
+    function closeModal() {
+        document.getElementById('orderDetailModal').style.display = 'none';
+        document.getElementById('modalBackground').style.display = 'none';
+    }
+
+    // 모달 배경 클릭 시 모달 닫기
+    document.getElementById('modalBackground').addEventListener('click', closeModal);
+</script>
+
 </body>
 </html>

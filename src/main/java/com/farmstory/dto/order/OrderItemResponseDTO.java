@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class OrderItemsResponseDTO {
+public class OrderItemResponseDTO {
     private int orderItemNo;
 
     private int price;
@@ -19,8 +19,8 @@ public class OrderItemsResponseDTO {
     private int count;
 
     // 엔티티를 DTO로 변환하는 메서드
-    public static OrderItemsResponseDTO fromEntity(OrderItem orderItem) {
-        return OrderItemsResponseDTO.builder()
+    public static OrderItemResponseDTO fromEntity(OrderItem orderItem) {
+        return OrderItemResponseDTO.builder()
                 .orderItemNo(orderItem.getOrderItemNo())
                 .price(orderItem.getPrice())
                 .point(orderItem.getPoint())
