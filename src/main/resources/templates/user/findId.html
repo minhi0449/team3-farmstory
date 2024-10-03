@@ -16,7 +16,7 @@
     <th:block th:include ="/include/header.html"/>
     <main>
         <div class="container">
-            <form th:action="@{/user/findIdResult}" method="gets" name="findIdResult">
+            <form th:action="@{/user/findIdResult}" method="get" name="findIdResult">
                 <section>
                     <div class="headtxt">
                         <span>아이디 찾기</span>
@@ -129,7 +129,7 @@
 
                 document.getElementById('nextBtn').disabled = false;  // "다음" 버튼 활성화
                 document.getElementById('nextBtn').addEventListener('click', function () {
-                    window.location.href = '/category/user/findresult';
+                    window.location.href = ctxPath + '/user/findIdResult';
                 });// 결과 페이지로 이동
             }).catch(error => {
                 console.error(error)

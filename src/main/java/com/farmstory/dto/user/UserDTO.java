@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 public class UserDTO {
 
     private String uid;
+
     private String pass;
     private String nick;
     private String name;
