@@ -15,6 +15,7 @@
     const reEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
     const reHp    = /^01(?:0|1|[6-9])-(?:\d{4})-\d{4}$/;
 
+
     window.onload = function (){
 
         // 아이디 유효성 검사
@@ -241,7 +242,7 @@
                 return false;
             }
 
-            // 폼 전송
             return true;
         }
+
     }

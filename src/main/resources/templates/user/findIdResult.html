@@ -47,7 +47,7 @@
                             <tr>
                                 <td>가입일</td>
                                 <td>
-                                    <p><span th:text="${user.regdate}"></span></p>
+                                    <p><span th:text="${user.createAt}"></span></p>
                                 </td>
                             </tr>
                         </table>
@@ -83,83 +83,3 @@
 
 </body>
 </html>
-
-
-
-
-
-<script>
-    const ctxPath = "/farmstory";
-
-    document.getElementById('sendCodeBtn').addEventListener('click', function (e) {
-        e.preventDefault();
-        console.log("here1.....")
-
-        const name = document.getElementById('name').value;
-        console.log('name:'+name)
-
-        const email = document.getElementById('email').value;
-        console.log('email:'+email)
-
-        if (name && email) {
-            fetch(ctxPath +'/user/findId', {  // 정적 경로가 아닌 API 경로로 수정
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({name: name, email: email})
-            }).then(response => {
-                if(!response.ok)
-                {
-                    throw new Error("인증코드 보내기 실패")
-                }
-                document.getElementById('verificationCode').style.display = 'block';
-                document.getElementById('verifyCodeBtn').style.display = 'block';
-            })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('인증번호 발송 중 오류가 발생했습니다.');
-                });
-        } else {
-            alert('이름과 이메일을 입력하세요.');
-        }
-    });
-
-    document.getElementById('verifyCodeBtn').addEventListener('click', function (e) {
-        e.preventDefault();
-
-        const code = document.getElementById('verificationCode').value;
-        console.log('code:'+ code)
-        const name = document.getElementById('name').value;
-        console.log('name:'+ name)
-        const email = document.getElementById('email').value;
-        console.log('email:'+ email)
-
-        if (code) {
-            fetch(ctxPath +'/user/findIdresult', {  // 정적 경로가 아닌 API 경로로 수정
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({code: code, name: name, email: email})
-            }).then(response => {
-                if(!response.ok)
-                {
-                    throw new Error("인증코드 검증 실패")
-                }
-
-                document.getElementById('nextBtn').disabled = false;  // "다음" 버튼 활성화
-                document.getElementById('nextBtn').addEventListener('click', function () {
-                    window.location.href = '/category/user/findresult';
-                });// 결과 페이지로 이동
-            }).catch(error => {
-                console.error(error)
-                alert('인증번호가 일치하지 않습니다.');
-            })
-        } else {
-            alert('인증번호를 입력하세요.');
-        }
-    });
-
-</script>
-
