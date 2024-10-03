@@ -4,7 +4,10 @@ package com.farmstory.controller;
 import com.farmstory.dto.BuyDTO;
 import com.farmstory.dto.CartRequestDTO;
 import com.farmstory.dto.CartResponseDTO;
+import com.farmstory.dto.ProductDTO;
+import com.farmstory.entity.Product;
 import com.farmstory.entity.User;
+import com.farmstory.repository.ProductRepository;
 import com.farmstory.security.MyUserDetails;
 import com.farmstory.service.CartService;
 import jakarta.servlet.http.HttpSession;
@@ -27,6 +30,7 @@ import java.util.List;
 public class CartController {
 
     private final CartService cartService;
+    private final ProductRepository productRepository;
 //    private final ProductService productService;
 
     // cart
@@ -58,24 +62,38 @@ public class CartController {
     }
 
     @GetMapping("/market/order") //바로 구매 type = right 입니다.
-    public String order(@AuthenticationPrincipal MyUserDetails userDetails, Model model, HttpSession session) {
+    public String order(@RequestParam(name = "type", required = false) String type, @AuthenticationPrincipal MyUserDetails userDetails, Model model, HttpSession session) {
         if (userDetails == null) {
             return "redirect:/user/login";
         }
 
-        if(session.getAttribute("carts") == null)
-        {
-            return "redirect:/market/cart?uid="+userDetails.getUsername();
+        if (type != null && type.equals("right")) {
+            if (session.getAttribute("rightBuy") == null) {
+                return "redirect:/";
+            }
+            BuyDTO rightBuy = (BuyDTO) session.getAttribute("rightBuy");
+            Product product = productRepository.findById(rightBuy.getProduct_id());
+            ProductDTO productDTO = ProductDTO.fromEntity(product);
+            User user = userDetails.getUser();
+
+            model.addAttribute("user", user);
+            model.addAttribute("product", productDTO);
+            model.addAttribute("count", rightBuy.getCount());
+            return "/market/order-buy";
+        }else {
+            if (session.getAttribute("carts") == null) {
+                return "redirect:/market/cart?uid=" + userDetails.getUsername();
+            }
+            List<Integer> sessionCarts = (List<Integer>) session.getAttribute("carts");
+            List<CartResponseDTO> carts = sessionCarts.stream().map(cartService::getWithProductById).toList();
+
+
+            User user = userDetails.getUser();
+
+            model.addAttribute("user", user);
+            model.addAttribute("carts", carts);
+            return "/market/order";
         }
-        List<Integer> sessionCarts = (List<Integer>) session.getAttribute("carts");
-        List<CartResponseDTO> carts = sessionCarts.stream().map(cartService::getWithProductById).toList();
-
-
-        User user = userDetails.getUser();
-
-        model.addAttribute("user", user);
-        model.addAttribute("carts", carts);
-        return "/market/order";
     }
 
     @PostMapping("/market/order") // 주문하기 -> 카운트업데이트 후 세션저장
