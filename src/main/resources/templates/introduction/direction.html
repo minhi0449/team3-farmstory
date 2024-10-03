@@ -8,12 +8,13 @@
     <link rel="stylesheet" th:href="@{/css/introduction/direction.css}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>길찾기</title>
-   
+
+
 </head>
 <body>
-    <div id="wrapper">
+<div id="wrapper">
 
-        <th:block th:include ="~{/include/header.html}"/>
+    <th:block th:include="~{/include/header.html}"/>
  
         <main id="main cf">
             <section class="mainIn cf">
@@ -29,7 +30,6 @@
                             <ul class="cate_lnb">
                                 <li> <a th:href="@{/introduction/introduction}" class="lnb1">인삿말</a></li>
                                 <li> <a th:href="@{/introduction/direction}" class="lnb2">찾아오시는길</a></li>
-                          
                             </ul><!-- .cate_lnb -->
                         </div><!-- .aside_bg -->
                     </div><!-- .sidebar -->
@@ -53,13 +53,13 @@
                                 <li>
                                     <span class="txt1">팜스토리</span><br>
                                     <p>
-                                        주소 : 경기도 이천시 잘한다구 신난다동 123<br>
-                                        전화 : 010-2345-7890  
+                                        주소 : 부산 중앙대로 749 범향빌딩 3층<br>
+                                        전화 : 051-1234-1234
                                     </p>
                                 </li>
                                 <li>
                                     <span class="txt1">찾아오시는 길</span>
-                                    <div class="map">
+                                    <div class="maps" id="map">
                                         map
                                     </div>
                                 </li>
@@ -76,4 +76,27 @@
     </div>
     
 </body>
+
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=98505f1a29aa3fd03b8f1eed170a5109"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=APIKEY&libraries=clusterer"></script>
+<script>
+    var container = document.getElementById('map');
+    var options = {
+        center: new kakao.maps.LatLng(35.15964570390735, 129.06036466068622),
+        level: 3
+    };
+
+    var map = new kakao.maps.Map(container, options);
+
+    // 마커를 표시할 위치
+    var markerPosition = new kakao.maps.LatLng(35.15964570390735, 129.06036466068622);
+
+    // 마커를 생성
+    var marker = new kakao.maps.Marker({
+        position: markerPosition
+    });
+
+    // 마커를 맵에 표시
+    marker.setMap(map);
+</script>
 </html>
