@@ -22,8 +22,14 @@
             const points = document.getElementsByClassName('point'); //적립되는 포인트
             const select_points = document.getElementsByClassName('select_point'); //적립 포인트률
             const totals = document.getElementsByClassName('total'); //소계
+            const stockCounts = document.getElementsByClassName('stock'); // 재고량
+            const originalCounts = Array.from(counts).map(input => parseInt(input.value) || 0);
+
+
 
             const btnDelete = document.getElementById('btnDelete');
+
+
 
             // input요소에 대해서 이벤트 리스너 추가 (수량을 입력하여 변경했을때 바로 반영되도록)
             const inputCount = document.querySelectorAll('.count');
@@ -263,7 +269,6 @@
                     });
             })
 
-
         } //onload 끝
 
     </script>
@@ -337,7 +342,7 @@
                         <td th:text="${carts.product.type}"></td>
                         <td class="prodName" th:text="${carts.product.prodName}">사과 500g</td>
                         <td>
-                            <input type="number" class="count" th:value="${carts.count}" min="1" max="100" step="1">
+                            <input type="number" class="count" id="input_count" th:value="${carts.count}" min="1" th:max="${carts.product.stock}" step="1">
                         </td>
                         <td class="deliveryFee" th:text="${carts.product.deliveryfee}">배송비</td>
                         <td class="etc" th:text="${carts.product.etc}">이상무료배송</td>

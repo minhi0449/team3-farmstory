@@ -170,7 +170,8 @@
                     </div><!-- .aside_cate -->
                     <div class="aside_bg">
                         <ul class="cate_lnb">
-                            <li> <a href="#">장보기</a></li>
+                            <li> <a th:href="@{/market/list}">장보기</a></li>
+                            <li> <a href="#" id="logincart">장바구니</a></li>
                         </ul><!-- .cate_lnb -->
                     </div><!-- .aside_bg -->
                 </div><!-- .sidebar -->
@@ -285,4 +286,20 @@
     <th:block th:include ="~{/include/footer.html}"/>
 </div><!-- #wrapper -->
 </body>
+<script>
+
+    document.getElementById('logincart').addEventListener('click',function (e){
+        e.preventDefault();
+
+        const uidElement = document.getElementsByName('uid')[0]; // uid 요소를 가져옵니다.
+        const uid = uidElement ? uidElement.value : null; // uid가 존재하는지 확인
+
+        if(!uid){
+            alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+            window.location.href = `/farmstory/user/login`;
+        }else{
+            window.location.href = `/farmstory/market/cart?uid=`+uid;
+        }
+    })
+</script>
 </html>
