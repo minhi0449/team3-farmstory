@@ -178,6 +178,36 @@ a, a:link, a:visited, a:active, a:hover{text-decoration: none; color: inherit;}
 /*    box-sizing: border-box;*/
 /*    margin-bottom: 20px;*/
 /*}*/
+.sub_bg {
+    overflow: hidden;
+}
+.slideImgs{
+
+    position: relative;
+    width:100%;
+}
+
+.slideImgs > li{
+    position: absolute;
+    transition: left 0.5s ease-out;
+}
+
+.slideImgs > li:nth-child(1){
+    left: 0;
+    top: 0;
+}
+.slideImgs > li:nth-child(2){
+    left: 100%;
+    top: 0;
+}
+.slideImgs > li:nth-child(3){
+    left: 100%;
+    top: 0;
+}
+
+.slideImg > img{
+    object-fit: cover;
+}
 
 main > section{
     width: 100%;
@@ -208,7 +238,7 @@ main > .sub_bg {
 
 main  .mainbntit{
     position: absolute;
-    z-index: 2;    
+    z-index: 5;
     background-attachment: fixed;
     left: 40px;
     top: 50px;
@@ -219,7 +249,7 @@ main .bannerbg{
     width: 230px;
     height: 312px;
     position: absolute;
-    z-index: 2;    
+    z-index: 5;
     background-attachment: fixed;
     box-sizing: border-box;
     right: 0;
@@ -228,7 +258,7 @@ main .bannerbg{
 
 main .main_banner{
     position: absolute;
-    z-index: 4;
+    z-index: 6;
     background-attachment: fixed;
     box-sizing: border-box;
     width: 230px;
