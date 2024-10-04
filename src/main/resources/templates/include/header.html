@@ -26,7 +26,7 @@
             <!-- 로그아웃 -->
             <th:block th:if="${!#authentication.principal.equals('anonymousUser')}">
                 <li><a th:href="@{/user/logout}" id="logout">로그아웃</a></li>
-                <li><a th:href="@{/user/myInfo}" id="myinfo">나의정보</a></li>
+                <li><a th:href="@{/my-page/cart}" id="myinfo">나의정보</a></li>
                 <li th:if="${#authentication.principal.user.role =='ADMIN'}">
                     <a th:href="@{/admin/product/list}" id="admin">관리자</a>
                 </li>
