@@ -6,12 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>주문하기</title>
-    <link rel="shortcut icon" href="../images/fav.ico" type="image/x-icon">
-    <link rel="stylesheet" href="../css/reset.css">
-    <link rel="stylesheet" href="../css/header.css">
-    <link rel="stylesheet" href="../css/my-page_common.css">
-    <link rel="stylesheet" href="../css/footer.css">
-    <link rel="stylesheet" href="../css/my-page_order.css">
+    <link rel="shortcut icon" th:href="@{/images/fav.ico}" type="image/x-icon">
+    <link rel="stylesheet" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" th:href="@{/css/my-page_common.css}">
+    <link rel="stylesheet" th:href="@{/css/my-page_order.css}">
     <style>
         .active > a {
             background:#8C8C8C !important;
@@ -20,7 +18,7 @@
 </head>
 <body>
 <!-- #header -->
-<th:block th:include="./include/header.html"/>
+<th:block th:include ="/include/header.html"/>
 
 <!-- #main -->
 <main id="main" class="cf">
@@ -129,18 +127,7 @@
     </section>
 </main><!-- #main -->
 
-<footer id="footer">
-    <div class="footerIn cf">
-        <img src="../images/footer_logo.png" alt="farmStory footer" class="flogo">
-        <div class="finfo">
-            <span class="tel">(주)팜스토리 / 사업자등록번호 123-45-67890 / 통신판매업신고 제 2013-팜스토리구-123호 / 벤처기업확인 서울지방중소기업청 제 012345678-9-01234호<br>
-                등록번호 팜스토리01234 (2013.04.01) / 발행인 : 홍길동 <br>
-                대표 : 홍길동 / 이메일 : email@mail.mail / 전화 : 01&#41; 234-5678 / 경기도 성남시 잘한다구 신난다동 345
-            </span><!-- .tel -->
-            <p class="fcopy">Copyright(C)홍길동 All rights reserved.</p><!-- .fcopy -->
-        </div><!-- .finfo -->
-    </div><!-- .footerIn -->
-</footer><!-- footer -->
+<th:block th:include ="/include/footer.html"/>
 
 <!-- 모달 배경 추가 -->
 <div id="modalBackground" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
