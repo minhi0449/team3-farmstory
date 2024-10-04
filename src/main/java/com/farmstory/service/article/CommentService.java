@@ -3,6 +3,7 @@ package com.farmstory.service.article;
 
 import com.farmstory.dto.article.CommentDTO;
 import com.farmstory.entity.Comment;
+import com.farmstory.entity.User;
 import com.farmstory.repository.UserRepository;
 import com.farmstory.repository.article.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -23,7 +25,9 @@ public class CommentService {
     public CommentDTO insertComment(CommentDTO commentDTO) {
 
         Comment comment = modelMapper.map(commentDTO, Comment.class);
-        comment.addUser(userRepository.findByUid(commentDTO.getWriter()));
+        User user = userRepository.findByUid(commentDTO.getWriter()).orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+        comment.setUser(user);
+
         Comment savedComment = commentRepository.save(comment);
 
         return modelMapper.map(savedComment, CommentDTO.class);

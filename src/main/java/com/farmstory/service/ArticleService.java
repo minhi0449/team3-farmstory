@@ -32,8 +32,12 @@ public class ArticleService {
         Article article = modelMapper.map(articleDTO, Article.class);
         log.info(article);
 
-        User user = userRepository.findByUid(articleDTO.getWriter());
-        article.addUser(user);
+        Optional<User> opt = userRepository.findByUid(articleDTO.getWriter());
+        if (opt.isPresent()) {
+            User user = opt.get();
+            article.addUser(user);
+        }
+
         // 저장
         Article savedArticle = articleRepository.save(article);
 
