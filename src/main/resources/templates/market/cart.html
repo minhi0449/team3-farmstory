@@ -54,6 +54,7 @@
                     if(count < 1 || count > max){
                         count = initialCounts[index];
                         input.value = count;
+                        alert('수량이 잘못되었습니다.');
                     }
                         //적립되는 포인트 계산
                         const total_point = Math.floor(price * (select_point / 100) * count);
