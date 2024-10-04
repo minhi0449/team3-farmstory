@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글보기</title>
+    <link rel="shortcut icon" th:href="@{/images/fav.ico}" type="image/x-icon">
+    <link rel="stylesheet" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/board_css.css}">
+
+    <script th:src="@{/js/utils.js}"></script>
+    <script>
+        window.onload = function() {
+            const commentForm = document.commentForm;
+
+            let originalText = '';  // 수정 전 텍스트 저장용 변수
+
+            // 댓글 Textarea 수정모드/일반모드 전환 함수
+            function textareaEditMode(edit, textarea, commentModify, commentCancel) {
+                if (edit) {
+                    // 수정모드
+                    textarea.readOnly = false;
+                    textarea.style.background = 'white';
+                    textarea.style.border = '1px solid #555';
+                    textarea.focus();
+                    commentModify.innerText = '수정완료';
+                    commentCancel.style.display = 'inline';
+                } else {
+                    // 일반모드
+                    textarea.readOnly = true;
+                    textarea.style.background = 'transparent';
+                    textarea.style.border = 'none';
+                    commentModify.innerText = '수정';
+                    commentCancel.style.display = 'none';
+                }
+            }
+            // 모든 삭제 버튼에 이벤트 리스너 추가
+            const deleteButtons = document.querySelectorAll('.commentRemove');
+            deleteButtons.forEach(btnDelete => {
+                btnDelete.onclick = async function(e) {
+                    e.preventDefault();
+
+                    const commentNo = this.getAttribute('data-id'); // 댓글 ID 가져오기
+
+                    const response = await fetch(`/farmstory/comment/delete?no=${commentNo}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response) {
+                        alert('댓글이 삭제되었습니다.');
+                        this.closest('article').remove(); // 화면에서 해당 댓글 제거
+                    } else {
+                        alert('댓글 삭제에 실패했습니다.');
+                    }
+                }
+            });
+            // 동적 이벤트 처리
+            document.addEventListener('click', function(e) {
+                const article = e.target.closest('article');  // 클릭한 요소가 속한 댓글(article)을 찾음
+                const textarea = article?.querySelector('textarea');  // 댓글 textarea 선택
+                const commentCancel = article?.querySelector('.commentCancel');  // 취소 버튼
+                const commentModify = article?.querySelector('.commentModify');  // 수정 버튼
+
+                if (!textarea || !commentCancel || !commentModify) return;  // 요소가 없을 경우 처리하지 않음
+
+                // 취소 버튼 클릭
+                if (e.target.classList.contains('commentCancel')) {
+                    e.preventDefault();
+                    textarea.value = originalText;  // 원래 텍스트로 복원
+                    textareaEditMode(false, textarea, commentModify, commentCancel);  // 다시 일반 모드로 전환
+                }
+
+                // 수정 버튼 클릭
+                if (e.target.classList.contains('commentModify')) {
+                    e.preventDefault();
+                    const mode = commentModify.innerText;  // 버튼의 현재 텍스트(수정/수정완료)
+
+                    if (mode === '수정') {
+                        originalText = textarea.value;  // 기존 텍스트 저장
+                        textareaEditMode(true, textarea, commentModify, commentCancel);  // 수정모드로 전환
+                    } else {
+                        // 수정완료 클릭
+                        const no = commentModify.dataset.no;
+                        const comment = textarea.value;
+
+                        const formData = new FormData();
+                        formData.append("no", no);
+                        formData.append("comment", comment);
+
+                        fetch('/farmstory/comment/modify', {
+                            method: 'POST',
+                            body: formData
+                        })
+                            .then(resp => resp.json())
+                            .then(data => {
+                                if (data != null) {
+                                    alert('댓글이 수정되었습니다.');
+                                    textareaEditMode(false, textarea, commentModify, commentCancel);  // 다시 일반 모드로 전환
+                                } else {
+                                    alert('댓글 수정에 실패하였습니다.');
+                                }
+                            })
+                            .catch(err => {
+                                console.error(err);
+                            });
+                    }
+                }
+            });
+
+            // 댓글 작성 버튼 처리
+            const btnWrite = document.getElementById('btnWrite');
+            btnWrite.onclick = async function(e) {
+                e.preventDefault();
+
+                const jsonData = {
+                    "writer": commentForm.writer.value,
+                    "parent": commentForm.parent.value,
+                    "content": commentForm.comment.value
+                };
+
+                const data = await fetchPost('/farmstory/comment/write', jsonData);
+
+                if (data.no > 0) {
+                    alert('댓글이 등록되었습니다.');
+                    window.location.reload();
+                } else {
+                    alert('댓글 등록에 실패하였습니다.');
+                }
+            }
+
+            // 댓글 작성 fetch 처리
+            async function fetchPost(url, data) {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                return response.json();
+            }
+        }
+    </script>
+    <th:block th:if="${group == 'crop'}">
+        <link rel="stylesheet" th:href="@{/css/croptalk.css}">
+    </th:block>
+    <th:block th:if="${group == 'community'}">
+        <link rel="stylesheet" th:href="@{/css/community.css}">
+    </th:block>
+
+</head>
+<body>
+<th:block th:include ="/include/header.html"/>
+
+<!-- #main -->
+<th:block th:if="${group == 'crop'}">
+    <th:block th:include ="/aside/cropaside.html"/>
+</th:block>
+<th:block th:if="${group == 'community'}">
+    <th:block th:include ="/aside/communityaside.html"/>
+</th:block>
+
+<div id="container">
+    <section class="view">
+        <nav>
+            <h1>글보기</h1>
+        </nav>
+        <table border="0">
+            <tr>
+                <th>제목</th>
+                <td><input type="text" name="title" th:value="${articleDTO.title}" readonly/></td>
+            </tr>
+            <tr>
+                <th>글쓴이</th>
+                <td><input type="text" name="title" th:value="${articleDTO.nick}" readonly/></td>
+            </tr>
+            <tr th:if="${articleDTO.file > 0}">
+                <th>파일</th>
+                <td>
+                    <th:block th:each="file:${articleDTO.fileList}">
+                        <a th:href="@{/file/download/{fno}(fno=${file.fno})}">[[${file.oName}]]</a>&nbsp;<span>[[${file.download}]]</span>회 다운로드<br>
+                    </th:block>
+                </td>
+            </tr>
+            <tr>
+                <th>내용</th>
+                <td>
+                    <textarea name="content" readonly>[[${articleDTO.content}]]</textarea>
+                </td>
+            </tr>
+        </table>
+
+        <div>
+            <a th:href="@{/article/delete(group=${group}, cate=${cate},no=${articleDTO.ano})}" class="btn btnRemove">삭제</a>
+            <a th:href="@{/article/modify(group=${group}, cate=${cate},no=${articleDTO.ano})}" class="btn btnModify">수정</a>
+            <a th:href="@{/article/list}" class="btn btnList">목록</a>
+        </div>
+
+        <!-- 댓글리스트 -->
+        <section class="commentList">
+            <h3>댓글목록</h3>
+            <th:block th:if="${articleDTO.commentList != null}">
+                <th:block th:each="comment : ${articleDTO.commentList}">
+                    <article class="comment">
+                <span>
+                    <span class="nick">[[${comment.user.nick}]]</span>
+                    <span class="date">&nbsp;[[${comment.rdate}]]</span>
+                </span>
+                        <textarea name="comment" readonly>[[${comment.content}]]</textarea>
+
+                        <!-- div 태그에 th:if를 사용하여 조건부로 출력 -->
+                        <div th:if="${#authentication != null and #authentication.principal.user.uid == comment.user.uid}">
+                            <a href="#" class="commentRemove" data-id="${comment.no}">삭제</a>
+                            <a href="#" class="commentCancel" data-id="${comment.no}">취소</a>
+                            <a href="#" class="commentModify" data-id="${comment.no}">수정</a>
+                        </div>
+                    </article>
+                </th:block>
+            </th:block>
+            <p th:if="${articleDTO.commentList.size() == 0}" class="empty">등록된 댓글이 없습니다.</p>
+        </section>
+
+        <!-- 댓글입력폼 -->
+
+        <section class="commentForm">
+            <h3>댓글쓰기</h3>
+            <form name="commentForm">
+                <input type="hidden" name="parent" th:value="${articleDTO.ano}"/>
+                <th:block th:if="${#authentication != null}">
+                    <input type="hidden" name="writer" th:value="${#authentication.principal.user.uid}"/>
+                    <span type="text" class="nick" th:value="${#authentication.principal.user.nick}"></span>
+                </th:block>
+                <textarea name="comment"></textarea>
+                <div>
+                    <a href="#" class="btnCancel">취소</a>
+                    <a href="#" id="btnWrite" class="btnWrite">작성완료</a>
+                </div>
+            </form>
+        </section>
+        </th:block>
+
+    </section>
+</div>
+</div><!-- .articleIn -->
+</article><!-- .article -->
+</section>
+</main><!-- #main -->
+<th:block th:include ="/include/footer.html"/>
+
+</body>
+</html>

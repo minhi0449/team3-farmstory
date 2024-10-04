@@ -72,9 +72,9 @@
     background: #888;
     color: #fff;
 }
+
 .list > .btnWrite {
     position: absolute;
-    bottom: 14px;
     right: 0;
     width: 54px;
     height: 35px;

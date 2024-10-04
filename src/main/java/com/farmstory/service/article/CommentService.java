@@ -3,7 +3,7 @@ package com.farmstory.service.article;
 
 import com.farmstory.dto.article.CommentDTO;
 import com.farmstory.entity.Comment;
-import com.farmstory.entity.User;
+import com.farmstory.repository.UserRepository;
 import com.farmstory.repository.article.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,19 +19,11 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final ModelMapper modelMapper;
-
+    private final UserRepository userRepository;
     public CommentDTO insertComment(CommentDTO commentDTO) {
 
         Comment comment = modelMapper.map(commentDTO, Comment.class);
-
-        // CommentDTO의 writer가 Comment 엔티티에는 writer 속성이 없기 때문에 직접 댓글 작성자 아이디를 설정
-        User user = User.builder()
-                        .uid(commentDTO.getWriter())
-                        .build();
-
-        comment.addUser(user);
-        log.info(comment);
-
+        comment.addUser(userRepository.findByUid(commentDTO.getWriter()));
         Comment savedComment = commentRepository.save(comment);
 
         return modelMapper.map(savedComment, CommentDTO.class);
@@ -45,11 +37,27 @@ public class CommentService {
         return null;
     }
 
-    public void updateComment(CommentDTO commentDTO) {
+    public CommentDTO updateComment(CommentDTO commentDTO) {
+        Comment comment = commentRepository.findById(commentDTO.getNo())
+                .orElseThrow(() -> new IllegalArgumentException("NO Comment found with id:" + commentDTO.getNo()));
 
+        // 댓글 내용 수정
+        comment.setContent(commentDTO.getContent());
+
+        Comment updatedComment = commentRepository.save(comment);
+        return modelMapper.map(updatedComment, CommentDTO.class);
     }
 
     public void deleteComment(int no) {
 
+    }
+    public boolean deleteCommentById(int no) {
+        try {
+            commentRepository.deleteById(no);
+            return true;
+        } catch (Exception e) {
+            log.error("Error while deleting comment: " + e.getMessage());
+            return false;
+        }
     }
 }

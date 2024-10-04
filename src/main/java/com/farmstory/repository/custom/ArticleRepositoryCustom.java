@@ -9,5 +9,4 @@ public interface ArticleRepositoryCustom {
 
     public Page<Tuple> selectArticleAllForList(PageRequestDTO pageRequestDTO, Pageable pageable);
     public Page<Tuple> selectArticleForSearch(PageRequestDTO pageRequestDTO, Pageable pageable);
-    Page<Tuple> selectArticleForListByCate(PageRequestDTO pageRequestDTO, Pageable pageable, String cate);
 }

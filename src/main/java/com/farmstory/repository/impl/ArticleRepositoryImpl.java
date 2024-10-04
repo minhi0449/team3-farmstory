@@ -20,7 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Repository
 public class ArticleRepositoryImpl implements ArticleRepositoryCustom {
-
     private final JPAQueryFactory queryFactory;
 
     private QArticle qArticle = QArticle.article;
@@ -30,24 +29,28 @@ public class ArticleRepositoryImpl implements ArticleRepositoryCustom {
     public Page<Tuple> selectArticleAllForList(PageRequestDTO pageRequestDTO, Pageable pageable) {
 
         List<Tuple> content  = queryFactory
-                                        .select(qArticle, qUser.nick)
-                                        .from(qArticle)
-                                        .join(qUser)
-                                        .on(qArticle.user.uid.eq(qUser.uid))
-                                        .offset(pageable.getOffset())
-                                        .limit(pageable.getPageSize())
-                                        .orderBy(qArticle.ano.desc())
-                                        .fetch();
+                .select(qArticle, qUser.nick)
+                .from(qArticle)
+                .where(qArticle.cate.eq(pageRequestDTO.getCate()))
+                .join(qUser)
+                .on(qArticle.user.uid.eq(qUser.uid))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(qArticle.ano.desc())
+                .fetch();
 
-        log.info("content : " + content);
 
         long total = queryFactory
-                        .select(qArticle.count())
-                        .from(qArticle)
-                        .fetchOne();
+                .select(qArticle.count())
+                .from(qArticle)
+                .where(qArticle.cate.eq(pageRequestDTO.getCate()))
+                .fetchOne();
 
         log.info("total : " + total);
-
+        log.info("List PageNumber"+pageable.getPageNumber());
+        log.info("List Offset: " + pageable.getOffset());
+        log.info("List Page size: " + pageable.getPageSize());
+        log.info("List content : " + content);
         // 페이징 처리를 위해 page 객체 리턴
         return new PageImpl<Tuple>(content, pageable, total);
     }
@@ -73,8 +76,8 @@ public class ArticleRepositoryImpl implements ArticleRepositoryCustom {
 
             BooleanExpression titleExpression = qArticle.title.contains(keyword);
             BooleanExpression contentExpression = qArticle.content.contains(keyword);
-
-            expression = titleExpression.or(contentExpression);
+            BooleanExpression cateExpression = qArticle.cate.eq(pageRequestDTO.getCate());
+            expression = titleExpression.or(contentExpression).and(cateExpression);
             log.info(expression);
 
         }else if(type.equals("writer")){
@@ -83,52 +86,27 @@ public class ArticleRepositoryImpl implements ArticleRepositoryCustom {
         }
 
         List<Tuple> content  = queryFactory
-                                .select(qArticle, qUser.nick)
-                                .from(qArticle)
-                                .join(qUser)
-                                .on(qArticle.user.uid.eq(qUser.uid))
-                                .where(expression)
-                                .offset(pageable.getOffset())
-                                .limit(pageable.getPageSize())
-                                .orderBy(qArticle.ano.desc())
-                                .fetch();
-
-        log.info("content : " + content);
-
-        long total = queryFactory
-                        .select(qArticle.count())
-                        .from(qArticle)
-                        .where(expression)
-                        .join(qUser)
-                        .on(qArticle.user.uid.eq(qUser.uid))
-                        .fetchOne();
-
-        // 페이징 처리를 위해 page 객체 리턴
-        return new PageImpl<Tuple>(content, pageable, total);
-    }
-
-    @Override
-    public Page<Tuple> selectArticleForListByCate(PageRequestDTO pageRequestDTO, Pageable pageable, String cate) {
-
-        List<Tuple> content  = queryFactory
                 .select(qArticle, qUser.nick)
                 .from(qArticle)
                 .join(qUser)
                 .on(qArticle.user.uid.eq(qUser.uid))
-                .where(qArticle.cate.eq(cate))
+                .where(expression)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(qArticle.ano.desc())
                 .fetch();
 
+        log.info("Search Offset: " + pageable.getOffset());
+        log.info("Search Page size: " + pageable.getPageSize());
         log.info("content : " + content);
 
         long total = queryFactory
                 .select(qArticle.count())
                 .from(qArticle)
+                .where(expression)
+                .join(qUser)
+                .on(qArticle.user.uid.eq(qUser.uid))
                 .fetchOne();
-
-        log.info("total : " + total);
 
         // 페이징 처리를 위해 page 객체 리턴
         return new PageImpl<Tuple>(content, pageable, total);

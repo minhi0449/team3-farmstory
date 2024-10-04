@@ -101,8 +101,4 @@ h2::after{display: block; content: ""; clear: both; width: 762px; height: 1px; b
     background: #888;
     color: #fff;
 }
-.list > .btnWrite {
-    position: absolute;
-    bottom: 14px;
-    right: 0;
-}
+

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글보기</title>
+    <link rel="shortcut icon" th:href="@{/images/fav.ico}" type="image/x-icon">
+    <link rel="stylesheet" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/board_css.css}">
+
+    <script th:src="@{/js/utils.js}"></script>
+    <script>
+
+        window.onload = function () {
+
+            const btnWrite = document.getElementById('btnWrite');
+            const commentForm = document.commentForm;
+            const commentList = document.getElementsByClassName('commentList')[0];
+
+            // 모든 삭제 버튼에 이벤트 리스너 추가
+            const deleteButtons = document.querySelectorAll('.remove');
+            deleteButtons.forEach(btnDelete => {
+                btnDelete.onclick = async function(e) {
+                    e.preventDefault();
+
+                    const commentNo = this.getAttribute('data-id'); // 댓글 ID 가져오기
+
+                    const response = await fetch(`/farmstory/comment/delete/${commentNo}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response) {
+                        alert('댓글이 삭제되었습니다.');
+                        this.closest('article').remove(); // 화면에서 해당 댓글 제거
+                    } else {
+                        alert('댓글 삭제에 실패했습니다.');
+                    }
+                }
+            });
+
+            btnWrite.onclick = async function (e) {
+                e.preventDefault();
+
+                const jsonData = {
+                   "writer": commentForm.writer.value,
+                   "parent": commentForm.parent.value,
+                   "content": commentForm.content.value
+               }
+
+                const data = await fetchPost('/farmstory/comment/write', jsonData)
+
+                console.log('돌아온 데이터 : '+data.no);
+
+                if (data.no > 0) {
+                    alert('댓글이 등록 되었습니다.');
+                    window.location.reload();
+
+                }else {
+                    alert('댓글 등록에 실패하였습니다.'
+                    )
+                }
+            }
+        }
+
+    </script>
+
+    <th:block th:if="${group == 'crop'}">
+        <link rel="stylesheet" th:href="@{/css/croptalk.css}">
+    </th:block>
+    <th:block th:if="${group == 'community'}">
+        <link rel="stylesheet" th:href="@{/css/community.css}">
+    </th:block>
+
+</head>
+<body>
+<th:block th:include ="/include/header.html"/>
+
+
+<!-- #main -->
+<th:block th:if="${group == 'crop'}">
+    <th:block th:include ="/aside/cropaside.html"/>
+</th:block>
+<th:block th:if="${group == 'community'}">
+    <th:block th:include ="/aside/communityaside.html"/>
+</th:block>
+
+<div id="container">
+    <section class="view">
+        <nav>
+            <h1>글보기</h1>
+        </nav>
+        <table border="0">
+            <tr>
+                <th>제목</th>
+                <td><input type="text" name="title" th:value="${articleDTO.title}" readonly/></td>
+            </tr>
+            <tr>
+                <th>글쓴이</th>
+                <td><input type="text" name="title" th:value="${articleDTO.nick}" readonly/><td>
+            </tr>
+            <tr th:if="${articleDTO.file > 0}">
+                <th>파일</th>
+                <td>
+                    <th:block th:each="file:${articleDTO.fileList}">
+                        <a th:href="@{/file/download/{fno}(fno=${file.fno})}">[[${file.oName}]]</a>&nbsp;<span>[[${file.download}]]</span>회 다운로드<br>
+                    </th:block>
+                </td>
+            </tr>
+            <tr>
+                <th>내용</th>
+                <td>
+                    <textarea name="content" readonly>[[${articleDTO.content}]]</textarea>
+                </td>
+            </tr>
+        </table>
+
+        <div>
+            <a th:href="@{/article/delete(group=${group}, cate=${cate},no=${articleDTO.ano})}" class="btn btnRemove">삭제</a>
+            <a th:href="@{/article/modify(group=${group}, cate=${cate},no=${articleDTO.ano})}" class="btn btnModify">수정</a>
+            <a th:href="@{/article/list}" class="btn btnList">목록</a>
+        </div>
+
+        <!-- 댓글리스트 -->
+        <section class="commentList">
+            <h3>댓글목록</h3>
+
+            <article th:each="comment:${articleDTO.commentList}">
+                <span class="nick">[[${comment.user.nick}]]</span>
+                <span class="date">[[${comment.rdate}]]</span>
+                <p class="content">[[${comment.content}]]</p>
+                <div>
+                    <a href="#" class="remove" th:data-id="${comment.no}">삭제</a>
+                    <a href="#" class="modify">수정</a>
+                </div>
+            </article>
+
+            <p th:if="${articleDTO.commentList.size()==0}" class="empty">등록된 댓글이 없습니다.</p>
+
+        </section>
+
+        <!-- 댓글입력폼 -->
+        <section class="commentForm">
+            <h3>댓글쓰기</h3>
+            <form name="commentForm">
+                <input type="text" name="parent" th:value="${articleDTO.ano}"/>
+                <input type="text" name="writer" th:value="${#authentication.principal.user.uid}"/>
+                <textarea name="content"></textarea>
+                <div>
+                    <a href="#" class="btnCancel">취소</a>
+                    <input type="submit" id="btnWrite" class="btnWrite" value="작성완료"/>
+
+                </div>
+            </form>
+        </section>
+
+    </section>
+</div>
+</div><!-- .articleIn -->
+</article><!-- .article -->
+</section>
+</main><!-- #main -->
+<th:block th:include ="/include/footer.html"/>
+
+</body>
+</html>

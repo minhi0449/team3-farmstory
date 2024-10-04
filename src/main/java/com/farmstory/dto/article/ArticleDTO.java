@@ -13,8 +13,9 @@ import java.util.List;
 @Builder
 public class ArticleDTO {
 
-    private int no;
+    private int ano;
 
+    private String group;
     private String cate;
 
     private String title;

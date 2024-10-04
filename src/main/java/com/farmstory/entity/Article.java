@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,6 +20,9 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ano;
 
+
+
+    @Column(name = "`group`")
     private String group;
     private String cate;
 
@@ -50,8 +52,11 @@ public class Article {
     @OneToMany(mappedBy = "parent")
     private List<Comment> commentList;
 
-    public void addnick(String nick) {
+    public void addNick(String nick) {
         this.nick = nick;
+    }
+    public void addUser(User user) {
+        this.user = user;
     }
 
 
