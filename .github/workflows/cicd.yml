@@ -57,7 +57,7 @@ jobs:
           scp -i private_key.pem \
             -o StrictHostKeyChecking=no \
             $JAR_FILE \
-            ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }}:/home/${{ secrets.AWS_EC2_USER }}/
+            ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }}:/home/
       
       - name: Restart Spring Application on EC2
         run: |
@@ -66,7 +66,7 @@ jobs:
             -o StrictHostKeyChecking=no \
             ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} << EOF
             pgrep java | xargs kill -9;
-            nohup java -jar -Dspring.profiles.active=prod /home/${{ secrets.AWS_EC2_USER }}/$JAR_FILE > app.log 2>&1 &
+            nohup java -jar -Dspring.profiles.active=prod /home/$JAR_FILE > app.log 2>&1 &
           EOF
 
       - name: Cleanup
