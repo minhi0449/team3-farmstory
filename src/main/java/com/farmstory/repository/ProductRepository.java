@@ -10,9 +10,9 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
-    public Product findById(int prodNo);
+    Product findById(int prodNo);
     long count();
     List<Product> findByType(String type);
     Page<Product> findByType(String type, Pageable pageable);
-
+    Product findByProdName(String ProdName);
 }

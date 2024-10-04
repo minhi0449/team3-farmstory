@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>농작물이야기</title>
+    <link rel="shortcut icon" th:href="@{/images/fav.ico}" type="image/x-icon">
+    <link rel="stylesheet" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/board_css.css}">
+
+    <th:block th:if="${group == 'crop'}">
+        <link rel="stylesheet" th:href="@{/css/croptalk.css}">
+    </th:block>
+    <th:block th:if="${group == 'community'}">
+        <link rel="stylesheet" th:href="@{/css/community.css}">
+    </th:block>
+</head>
+<body>
+    <th:block th:include ="/include/header.html"/>
+
+
+   <!-- #main -->
+    <th:block th:if="${group == 'crop'}">
+    <th:block th:include ="/aside/cropaside.html"/>
+    </th:block>
+    <th:block th:if="${group == 'community'}">
+        <th:block th:include ="/aside/communityaside.html"/>
+    </th:block>
+
+
+                <div id="container">
+
+                    <section class="write">
+                        <nav>
+                            <h1>글쓰기</h1>
+                        </nav>
+                        <form th:action="@{/article/write}" method="post" enctype="multipart/form-data">
+                            <input type ="hidden" name="group" th:value="${group}"/>
+                            <input type ="hidden" name="cate" th:value="${cate}"/>
+                            <input type="hidden" name="writer" th:value="${#authentication.principal.user.uid}"/>
+                            <table border="0">
+                                <tr>
+                                    <th>제목</th>
+                                    <td><input type="text" name="title" placeholder="제목을 입력하세요." th:value="${articleDTO.title}"/></td>
+                                </tr>
+                                <tr th:if="${#authentication.principal.user}">
+                                    <th>글쓴이</th>
+                                    <td><input type="text" name="writerNick" th:value="${#authentication.principal.user.nick}" readonly/></td>
+                                </tr>
+                                <tr>
+                                    <th>내용</th>
+                                    <td>
+                                        <textarea name="content">[[${articleDTO.content}]]</textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>파일</th>
+                                    <td>
+                                        <p style="margin-bottom: 6px;">
+                                            최대 2개 파일 첨부 가능, 각 파일당 최대 10MB까지 가능
+                                        </p>
+                                        <input type="file" name="files"/>
+                                        <input type="file" name="files"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <div>
+                                <a th:href="@{/article/list}" class="btn btnCancel">취소</a>
+                                <input type="submit" value="작성완료" class="btn btnComplete"/>
+                            </div>
+                        </form>
+
+                    </section>
+
+                 </div>
+            </div><!-- .articleIn -->
+        </article><!-- .article -->
+    </section>
+</main><!-- #main -->
+    <th:block th:include ="/include/footer.html"/>
+
+</body>
+</html>

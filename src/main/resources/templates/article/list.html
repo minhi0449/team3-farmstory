@@ -12,9 +12,9 @@
     <th:block th:if="${group == 'crop'}">
         <link rel="stylesheet" th:href="@{/css/croptalk.css}">
     </th:block>
-    <th:block th:if="${group == 'community'}">
-        <link rel="stylesheet" th:href="@{/css/community.css}">
-    </th:block>
+<!--    <th:block th:if="${group == 'community'}">-->
+<!--        <link rel="stylesheet" th:href="@{/css/community.css}">-->
+<!--    </th:block>-->
     
 </head>
 <body>
@@ -59,7 +59,7 @@
                             </tr>
                             <tr th:each="article, stat:${pageResponseDTO.getDtoList()}">
                                 <td>[[${pageResponseDTO.startNo - stat.index}]]</td>
-                                <td><a th:href="@{/article/view(no=${article.no})}">[[${article.title}]]&#91;[[${article.comment}]]&#93;</a></td>
+                                <td><a th:href="@{/article/view/{group}/{cate}/{ano}(ano=${article.ano}, group=${group}, cate=${cate})}">[[${article.title}]]&#91;[[${article.comment}]]&#93;</a></td>
                                 <td>[[${article.nick}]]</td>
                                 <td>[[${article.rdate}]]</td>
                                 <td>[[${article.hit}]]</td>
@@ -77,7 +77,7 @@
 
                             <th:block th:each="num:${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
                                 <a th:if="${pageResponseDTO.keyword == null}"
-                                   th:href="@{/article/list(pg=${num})}"
+                                    th:href="@{/article/list/{group}/{cate}(group=${group}, cate=${cate}, pg=${num})}"
                                    th:class="${num == pageResponseDTO.pg} ? 'current' : 'num'">[[${num}]]</a>
                                 <a th:if="${pageResponseDTO.keyword != null}"
                                    th:href="@{/article/list(pg=${num}, type=${pageResponseDTO.type}, keyword=${pageResponseDTO.keyword})}"
@@ -91,7 +91,7 @@
 
                         </div>
 
-                        <a th:href="@{/article/write}" class="btn btnWrite">글쓰기</a>
+                        <a th:href="@{/article/write(group=${group},cate=${cate})}" class="btnWrite">글쓰기</a>
 
                     </section>
                  </div>

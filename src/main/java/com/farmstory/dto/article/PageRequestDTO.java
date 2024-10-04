@@ -22,8 +22,7 @@ public class PageRequestDTO {
     @Builder.Default
     private int size = 10;
 
-    @Builder.Default
-    private String cate = "free";
+    private String cate;
 
     private String type;
     private String keyword;
