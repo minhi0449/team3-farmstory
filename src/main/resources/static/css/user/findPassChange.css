@@ -1,3 +1,31 @@
+
+input:focus{outline: none;}
+
+#wrapper {
+    width: 100%;
+    height: auto;
+    top: -203px;
+    left: -480px;
+    background: #FFFFFF;
+}
+
+
+header {
+    width: 100%;
+}
+
+header > div {
+    width: 790px;
+    height: 30px;
+    margin: 0 auto;
+}
+
+header > div > .top {
+    font-size: 10.13px;
+    line-height: 30px;
+    text-align: left;
+}
+
 input::placeholder{
     text-indent: 6px;
 } /* 텍스트 들여쓰기 */
@@ -203,6 +231,7 @@ main > section > form > p {
 }
 
 .cancel-button {
+    cursor: pointer;
     position: absolute;
     width: 42px;
     height: 35px;
@@ -229,6 +258,7 @@ main > section > form > p {
 }
 
 .next-button {
+    cursor: pointer;
     position: absolute;
     width: 42px;
     height: 35px;
@@ -253,3 +283,4 @@ main > section > form > p {
     text-align: center;
     background: white;
 }
+
