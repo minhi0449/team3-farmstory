@@ -1,7 +1,4 @@
-# Team3_Farmstory
-> 개발기간 : 2024.09.30 ~ 2024.10.04 (5일간)
-
-# 🐾 Team3 _Farmstory  
+# Team3 _Farmstory  
 > **개발 기간 : 2024. 09. 30 ~ 2024. 10. 04 (총 5일)**  
 
 농산물 전자상거래(쇼핑몰)와 커뮤니티 기능을 통합한 **Spring Boot 3 + JPA** 기반 웹 플랫폼입니다.  
@@ -21,17 +18,6 @@
 | **확장성** | JPA `ddl-auto:update` + Redis 캐시 구조 → 추후 트래픽 확대 대비 |
 
 ---
-
-## 🔖 목차
-1. [사용 기술(Tech Stack)](#-사용-기술-tech-stack)  
-2. [주요 기능(Core Features)](#-주요-기능-core-features)  
-3. [폴더 구조(Project Structure)](#-폴더-구조-project-structure)  
-4. [로컬 실행 방법(Quick Start)](#-로컬-실행-방법-quick-start)  
-5. [기여 방법(Contributing)](#-기여-방법-contributing)  
-6. [라이선스(License)](#-라이선스-license)  
-
----
-
 ## ✦ 사용 기술 (Tech Stack)
 | 분야 | 스택 |
 |----|------|
@@ -40,6 +26,10 @@
 | **Database** | ![MySQL 8](https://img.shields.io/badge/MySQL%208-4479A1?style=flat&logo=mysql&logoColor=white) ![Redis 5](https://img.shields.io/badge/Redis%205-DC382D?style=flat&logo=redis&logoColor=white) |
 | **DevOps** | ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white) ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat&logo=github-actions&logoColor=white) ![AWS EC2 | RDS | S3](https://img.shields.io/badge/AWS%20(EC2%20%7C%20RDS%20%7C%20S3)-F7931E?style=flat&logo=amazon-aws&logoColor=white) |
 
+
+| 분야        | 기술 스택 |
+|------------|-------------------------------------------------------------------------------------|
+| **DevOps** | ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white) ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat&logo=github-actions&logoColor=white) ![AWS EC2 \| RDS \| S3](https://img.shields.io/badge/AWS%20(EC2%20%7C%20RDS%20%7C%20S3)-F7931E?style=flat&logo=amazon-aws&logoColor=white) |
 ---
 
 ## ✦ 주요 기능 (Core Features)
@@ -69,7 +59,3 @@
 - **멀티파트 파일 업로드**: 10 MB 제한, 이미지 리사이징  
 - **로그 관리**: `farmstory.log` 분리, Hibernate SQL Trace  
 - **DevTools LiveReload**: 실시간 반영으로 개발 생산성 향상  
-
----
-
-## ✦ 폴더 구조 (Project Structure)
